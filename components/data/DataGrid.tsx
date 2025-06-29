@@ -268,12 +268,15 @@ export default function DataGrid({
                 >
                   <div className="flex items-center gap-2 w-full min-w-0">
                     <span className={`flex-1 break-words text-sm ${error ? 'text-red-800 font-medium' : style.textColor}`}>
-                      {value || <span className="text-gray-400 italic">empty</span>}
+                      {value !== undefined && value !== null && value !== ''
+                        ? <>{String(value)}</>
+                        : <span className="text-gray-400 italic">empty</span>}
                     </span>
+
                     {error && (
                       <div className="flex items-center gap-1 flex-shrink-0">
                         <AlertTriangle className="h-3 w-3 text-red-500" />
-                        <Badge 
+                        <Badge
                           variant={error.severity === 'error' ? 'destructive' : 'secondary'}
                           className="text-xs px-1 py-0"
                         >
@@ -281,10 +284,12 @@ export default function DataGrid({
                         </Badge>
                       </div>
                     )}
+
                     {enableInlineEdit && (
                       <Edit3 className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
                     )}
                   </div>
+
                   {error && (
                     <div className="absolute top-full left-0 right-0 p-2 bg-red-100 border border-red-200 rounded-b-lg z-10 shadow-lg">
                       <p className="text-xs text-red-700 font-medium">{error.message}</p>

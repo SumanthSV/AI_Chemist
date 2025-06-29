@@ -9,7 +9,8 @@ import {
   flexRender,
   createColumnHelper,
   SortingState,
-  ColumnFiltersState
+  ColumnFiltersState,
+  ColumnDef
 } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -186,7 +187,7 @@ export default function DataGrid({
   }, []);
 
   const columns = useMemo(() => {
-    const dataColumns = headers.map((header) =>
+    const dataColumns: ColumnDef<any>[] = headers.map((header) =>
       columnHelper.accessor(header, {
         header: ({ column }) => {
           const sampleValue = data[0]?.[header];
@@ -272,11 +273,10 @@ export default function DataGrid({
                         ? <>{String(value)}</>
                         : <span className="text-gray-400 italic">empty</span>}
                     </span>
-
                     {error && (
                       <div className="flex items-center gap-1 flex-shrink-0">
                         <AlertTriangle className="h-3 w-3 text-red-500" />
-                        <Badge
+                        <Badge 
                           variant={error.severity === 'error' ? 'destructive' : 'secondary'}
                           className="text-xs px-1 py-0"
                         >
@@ -284,12 +284,10 @@ export default function DataGrid({
                         </Badge>
                       </div>
                     )}
-
                     {enableInlineEdit && (
                       <Edit3 className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
                     )}
                   </div>
-
                   {error && (
                     <div className="absolute top-full left-0 right-0 p-2 bg-red-100 border border-red-200 rounded-b-lg z-10 shadow-lg">
                       <p className="text-xs text-red-700 font-medium">{error.message}</p>
@@ -305,27 +303,29 @@ export default function DataGrid({
 
     // Add row number column if requested
     if (showRowNumbers) {
-      dataColumns.unshift(
-        columnHelper.display({
-          id: 'rowNumber',
-          header: '#',
-          cell: ({ row }) => (
-            <div className="flex items-center gap-2 p-2 bg-gray-50 border-r min-w-[60px]">
-              <span className="text-sm font-mono text-gray-600">{row.index + 1}</span>
-              {onDeleteRow && (
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => onDeleteRow(row.index)}
-                  className="h-6 w-6 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
-                >
-                  <Trash2 className="h-3 w-3" />
-                </Button>
-              )}
-            </div>
-          ),
-        })
-      );
+      const rowNumberColumn: ColumnDef<any> = {
+        id: 'rowNumber',
+        header: '#',
+        cell: ({ row }) => (
+          <div className="flex items-center gap-2 p-2 bg-gray-50 border-r min-w-[60px]">
+            <span className="text-sm font-mono text-gray-600">{row.index + 1}</span>
+            {onDeleteRow && (
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => onDeleteRow(row.index)}
+                className="h-6 w-6 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+              >
+                <Trash2 className="h-3 w-3" />
+              </Button>
+            )}
+          </div>
+        ),
+        enableSorting: false,
+        enableColumnFilter: false,
+      };
+      
+      dataColumns.unshift(rowNumberColumn);
     }
 
     return dataColumns;

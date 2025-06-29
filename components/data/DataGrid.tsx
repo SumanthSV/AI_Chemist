@@ -7,7 +7,6 @@ import {
   getSortedRowModel,
   getFilteredRowModel,
   flexRender,
-  createColumnHelper,
   SortingState,
   ColumnFiltersState,
   ColumnDef
@@ -57,8 +56,6 @@ interface DataGridProps {
   showRowNumbers?: boolean;
   enableInlineEdit?: boolean;
 }
-
-const columnHelper = createColumnHelper<any>();
 
 export default function DataGrid({ 
   data, 
@@ -187,119 +184,118 @@ export default function DataGrid({
   }, []);
 
   const columns = useMemo(() => {
-    const dataColumns: ColumnDef<any>[] = headers.map((header) =>
-      columnHelper.accessor(header, {
-        header: ({ column }) => {
-          const sampleValue = data[0]?.[header];
-          const style = getColumnStyle(header, sampleValue);
-          const isKey = detectedKeyColumns.includes(header);
-          const relationship = relationshipSuggestions.find(r => r.sourceColumn === header);
-          
-          return (
-            <Button
-              variant="ghost"
-              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-              className={`h-auto p-2 font-semibold w-full justify-start ${style.headerBg} hover:opacity-80 transition-all min-w-[120px]`}
-            >
-              <div className="flex flex-col items-start gap-1 w-full">
-                <div className="flex items-center gap-2 w-full min-w-0">
-                  <span className="text-sm">{style.icon}</span>
-                  <span className="flex-1 text-left font-bold truncate text-sm" title={header}>
-                    {header}
-                  </span>
-                  {isKey && <Key className="h-3 w-3 text-amber-600 flex-shrink-0" />}
-                  {relationship && <Link className="h-3 w-3 text-purple-600 flex-shrink-0" />}
-                  {column.getIsSorted() === "asc" ? (
-                    <ArrowUp className="h-3 w-3 flex-shrink-0" />
-                  ) : column.getIsSorted() === "desc" ? (
-                    <ArrowDown className="h-3 w-3 flex-shrink-0" />
-                  ) : (
-                    <ArrowUpDown className="h-3 w-3 flex-shrink-0" />
-                  )}
-                </div>
-                <div className="flex items-center gap-1 w-full">
-                  <Badge variant="outline" className="text-xs font-medium px-1 py-0">
-                    {style.type}
-                  </Badge>
-                  {relationship && (
-                    <Badge variant="secondary" className="text-xs truncate max-w-[80px] px-1 py-0" title={relationship.targetFile}>
-                      → {relationship.targetFile}
-                    </Badge>
-                  )}
-                </div>
+    const dataColumns: ColumnDef<any>[] = headers.map((header) => ({
+      accessorKey: header,
+      header: ({ column }) => {
+        const sampleValue = data[0]?.[header];
+        const style = getColumnStyle(header, sampleValue);
+        const isKey = detectedKeyColumns.includes(header);
+        const relationship = relationshipSuggestions.find(r => r.sourceColumn === header);
+        
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className={`h-auto p-2 font-semibold w-full justify-start ${style.headerBg} hover:opacity-80 transition-all min-w-[120px]`}
+          >
+            <div className="flex flex-col items-start gap-1 w-full">
+              <div className="flex items-center gap-2 w-full min-w-0">
+                <span className="text-sm">{style.icon}</span>
+                <span className="flex-1 text-left font-bold truncate text-sm" title={header}>
+                  {header}
+                </span>
+                {isKey && <Key className="h-3 w-3 text-amber-600 flex-shrink-0" />}
+                {relationship && <Link className="h-3 w-3 text-purple-600 flex-shrink-0" />}
+                {column.getIsSorted() === "asc" ? (
+                  <ArrowUp className="h-3 w-3 flex-shrink-0" />
+                ) : column.getIsSorted() === "desc" ? (
+                  <ArrowDown className="h-3 w-3 flex-shrink-0" />
+                ) : (
+                  <ArrowUpDown className="h-3 w-3 flex-shrink-0" />
+                )}
               </div>
-            </Button>
-          );
-        },
-        cell: ({ row, column }) => {
-          const value = row.getValue(column.id);
-          const error = getCellError(row.index, column.id);
-          const style = getColumnStyle(column.id, value);
-          const isEditing = editingCell?.row === row.index && editingCell?.column === column.id;
-          
-          return (
-            <div className={`relative group transition-all duration-200 min-w-[120px] ${
-              error 
-                ? 'bg-red-50 border-2 border-red-300 rounded-lg' 
-                : `${style.bgColor} border hover:shadow-sm`
-            }`}>
-              {isEditing ? (
-                <div className="flex items-center gap-1 p-2">
-                  <Input
-                    value={editValue}
-                    onChange={(e) => setEditValue(e.target.value)}
-                    className="h-8 text-sm border-0 bg-white shadow-sm min-w-0"
-                    autoFocus
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') handleSaveEdit();
-                      if (e.key === 'Escape') handleCancelEdit();
-                    }}
-                  />
-                  <Button size="sm" variant="ghost" onClick={handleSaveEdit} className="h-8 w-8 p-0 flex-shrink-0">
-                    <Check className="h-3 w-3 text-green-600" />
-                  </Button>
-                  <Button size="sm" variant="ghost" onClick={handleCancelEdit} className="h-8 w-8 p-0 flex-shrink-0">
-                    <X className="h-3 w-3 text-red-600" />
-                  </Button>
-                </div>
-              ) : (
-                <div 
-                  className="p-2 cursor-pointer hover:bg-opacity-80 transition-all duration-200 min-h-[2.5rem] flex items-center"
-                  onClick={() => handleCellEdit(row.index, column.id, value)}
-                >
-                  <div className="flex items-center gap-2 w-full min-w-0">
-                    <span className={`flex-1 break-words text-sm ${error ? 'text-red-800 font-medium' : style.textColor}`}>
-                      {value !== undefined && value !== null && value !== ''
+              <div className="flex items-center gap-1 w-full">
+                <Badge variant="outline" className="text-xs font-medium px-1 py-0">
+                  {style.type}
+                </Badge>
+                {relationship && (
+                  <Badge variant="secondary" className="text-xs truncate max-w-[80px] px-1 py-0" title={relationship.targetFile}>
+                    → {relationship.targetFile}
+                  </Badge>
+                )}
+              </div>
+            </div>
+          </Button>
+        );
+      },
+      cell: ({ row, column }) => {
+        const value = row.getValue(column.id);
+        const error = getCellError(row.index, column.id);
+        const style = getColumnStyle(column.id, value);
+        const isEditing = editingCell?.row === row.index && editingCell?.column === column.id;
+        
+        return (
+          <div className={`relative group transition-all duration-200 min-w-[120px] ${
+            error 
+              ? 'bg-red-50 border-2 border-red-300 rounded-lg' 
+              : `${style.bgColor} border hover:shadow-sm`
+          }`}>
+            {isEditing ? (
+              <div className="flex items-center gap-1 p-2">
+                <Input
+                  value={editValue}
+                  onChange={(e) => setEditValue(e.target.value)}
+                  className="h-8 text-sm border-0 bg-white shadow-sm min-w-0"
+                  autoFocus
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleSaveEdit();
+                    if (e.key === 'Escape') handleCancelEdit();
+                  }}
+                />
+                <Button size="sm" variant="ghost" onClick={handleSaveEdit} className="h-8 w-8 p-0 flex-shrink-0">
+                  <Check className="h-3 w-3 text-green-600" />
+                </Button>
+                <Button size="sm" variant="ghost" onClick={handleCancelEdit} className="h-8 w-8 p-0 flex-shrink-0">
+                  <X className="h-3 w-3 text-red-600" />
+                </Button>
+              </div>
+            ) : (
+              <div 
+                className="p-2 cursor-pointer hover:bg-opacity-80 transition-all duration-200 min-h-[2.5rem] flex items-center"
+                onClick={() => handleCellEdit(row.index, column.id, value)}
+              >
+                <div className="flex items-center gap-2 w-full min-w-0">
+                  <span className={`flex-1 break-words text-sm ${error ? 'text-red-800 font-medium' : style.textColor}`}>
+                    {value !== undefined && value !== null && value !== ''
                         ? <>{String(value)}</>
                         : <span className="text-gray-400 italic">empty</span>}
-                    </span>
-                    {error && (
-                      <div className="flex items-center gap-1 flex-shrink-0">
-                        <AlertTriangle className="h-3 w-3 text-red-500" />
-                        <Badge 
-                          variant={error.severity === 'error' ? 'destructive' : 'secondary'}
-                          className="text-xs px-1 py-0"
-                        >
-                          {error.severity}
-                        </Badge>
-                      </div>
-                    )}
-                    {enableInlineEdit && (
-                      <Edit3 className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
-                    )}
-                  </div>
+                  </span>
                   {error && (
-                    <div className="absolute top-full left-0 right-0 p-2 bg-red-100 border border-red-200 rounded-b-lg z-10 shadow-lg">
-                      <p className="text-xs text-red-700 font-medium">{error.message}</p>
+                    <div className="flex items-center gap-1 flex-shrink-0">
+                      <AlertTriangle className="h-3 w-3 text-red-500" />
+                      <Badge 
+                        variant={error.severity === 'error' ? 'destructive' : 'secondary'}
+                        className="text-xs px-1 py-0"
+                      >
+                        {error.severity}
+                      </Badge>
                     </div>
                   )}
+                  {enableInlineEdit && (
+                    <Edit3 className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                  )}
                 </div>
-              )}
-            </div>
-          );
-        },
-      })
-    );
+                {error && (
+                  <div className="absolute top-full left-0 right-0 p-2 bg-red-100 border border-red-200 rounded-b-lg z-10 shadow-lg">
+                    <p className="text-xs text-red-700 font-medium">{error.message}</p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        );
+      },
+    }));
 
     // Add row number column if requested
     if (showRowNumbers) {

@@ -259,10 +259,3 @@ TanStack Table
 Framer Motion
 
 Lucide Icons
-
-💬 Support
-📧 support@data-alchemist.com
-
-💬 Join the Discord
-
-🐛 Report Issues

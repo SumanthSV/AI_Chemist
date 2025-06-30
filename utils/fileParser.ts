@@ -85,21 +85,17 @@ async function parseExcel(file: File): Promise<ParsedData> {
         );
         
         // Convert data rows to objects
-        const data = jsonData.slice(1)
-          .filter((row: any) => {
-            // Filter out completely empty rows
-            return Array.isArray(row) && row.some(cell => 
-              cell !== null && cell !== undefined && String(cell).trim() !== ''
-            );
-          })
-          .map((row: any[]) => {
-            const obj: any = {};
-            headers.forEach((header, index) => {
-              obj[header] = row[index] || '';
-            });
-            return obj;
+        const data = (jsonData.slice(1).filter((row): row is any[] => {
+          return Array.isArray(row) && row.some(cell =>
+            cell !== null && cell !== undefined && String(cell).trim() !== ''
+          );
+        })).map((row) => {
+          const obj: any = {};
+          headers.forEach((header, index) => {
+            obj[header] = row[index] || '';
           });
-        
+          return obj;
+        });
         resolve({ data, headers });
       } catch (error) {
         reject(error);

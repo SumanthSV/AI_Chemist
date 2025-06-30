@@ -140,7 +140,12 @@ function inferDataTypes(data: any[], headers: string[]): Record<string, string> 
 }
 
 function detectPatterns(data: any[], headers: string[]): string[] {
-  const patterns = [];
+  let patterns: {
+  type: string;
+  title: string;
+  count: number;
+  impact: string;
+}[] = [];
   
   // Check for common patterns
   headers.forEach(header => {
@@ -150,24 +155,44 @@ function detectPatterns(data: any[], headers: string[]): string[] {
     
     // Phone number pattern
     if (values.some(val => /^\+?[\d\s\-\(\)]+$/.test(String(val)))) {
-      patterns.push(`${header}: Phone number format detected`);
+      patterns.push({
+        type: 'phone_format',
+        title: `${header}: Phone number format detected`,
+        count: values.length,
+        impact: 'Field may contain phone numbers, consider masking or validating format'
+      });
     }
-    
     // Currency pattern
     if (values.some(val => /^\$?[\d,]+\.?\d*$/.test(String(val)))) {
-      patterns.push(`${header}: Currency format detected`);
+      patterns.push({
+        type: 'phone_format',
+        title: `${header}: Currency format detected`,
+        count: values.length,
+        impact: 'Field may contain phone numbers, consider masking or validating format'
+      });
     }
     
     // Percentage pattern
     if (values.some(val => String(val).includes('%'))) {
-      patterns.push(`${header}: Percentage format detected`);
+      patterns.push({
+        type: 'phone_format',
+        title: `${header}: Percentage format detected`,
+        count: values.length,
+        impact: 'Field may contain phone numbers, consider masking or validating format'
+      });
     }
     
     // Code pattern (alphanumeric with specific length)
     const lengths = values.map(val => String(val).length);
     const avgLength = lengths.reduce((a, b) => a + b, 0) / lengths.length;
     if (avgLength > 5 && avgLength < 20 && values.every(val => /^[A-Z0-9\-_]+$/i.test(String(val)))) {
-      patterns.push(`${header}: Code/ID pattern detected`);
+      patterns.push({
+        type: 'phone_format',
+        title: `${header}: Code/ID pattern detected`,
+        count: values.length,
+        impact: 'Field may contain phone numbers, consider masking or validating format'
+      });
+
     }
   });
   

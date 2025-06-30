@@ -1,7 +1,14 @@
+interface InsightPattern {
+  type: string;
+  title: string;
+  count: number;
+  impact: string;
+}
+
 export interface SchemaInfo {
   keyColumns: string[];
   dataTypes: Record<string, string>;
-  patterns: string[];
+  patterns: InsightPattern[];
   constraints: string[];
   relationships: Array<{
     column: string;
@@ -139,7 +146,7 @@ function inferDataTypes(data: any[], headers: string[]): Record<string, string> 
   return types;
 }
 
-function detectPatterns(data: any[], headers: string[]): string[] {
+function detectPatterns(data: any[], headers: string[]): InsightPattern[] {
   let patterns: {
   type: string;
   title: string;
@@ -200,7 +207,7 @@ function detectPatterns(data: any[], headers: string[]): string[] {
 }
 
 function detectConstraints(data: any[], headers: string[]): string[] {
-  const constraints = [];
+  let constraints: string[] = [];
   
   headers.forEach(header => {
     const values = data.map(row => row[header]).filter(val => val !== null && val !== '');

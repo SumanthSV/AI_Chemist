@@ -45,6 +45,8 @@ export interface PriorityWeight {
   field: string;
   weight: number;
   type: 'maximize' | 'minimize';
+  description?: string;
+  category?: 'fulfillment' | 'fairness' | 'workload' | 'quality';
 }
 
 interface DataState {

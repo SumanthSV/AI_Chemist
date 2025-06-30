@@ -154,7 +154,7 @@ export default function PriorityManager() {
           weight: existingPriority?.weight || 50,
           type: existingPriority?.type || getDefaultType(field) as 'maximize' | 'minimize',
           description: fieldInfo?.description,
-          category: fieldInfo?.category
+          category: fieldInfo?.category as 'fulfillment' | 'fairness' | 'workload' | 'quality' | undefined
         };
       });
       setPriorities(newPriorities);
@@ -194,20 +194,19 @@ export default function PriorityManager() {
   }, [selectedFields, availableFields, setPriorities, presetProfiles]);
 
   const updatePriorityWeight = useCallback((field: string, weight: number) => {
-    setPriorities(prev => 
-      prev.map(p => 
-        p.field === field ? { ...p, weight } : p
-      )
-    );
-  }, [setPriorities]);
+  const newPriorities = priorities.map(p =>
+    p.field === field ? { ...p, weight } : p
+  );
+  setPriorities(newPriorities);
+}, [priorities, setPriorities]);
 
   const updatePriorityType = useCallback((field: string, type: 'maximize' | 'minimize') => {
-    setPriorities(prev => 
-      prev.map(p => 
-        p.field === field ? { ...p, type } : p
-      )
-    );
-  }, [setPriorities]);
+  const newPriorities = priorities.map(p =>
+    p.field === field ? { ...p, type } : p
+  );
+  setPriorities(newPriorities);
+}, [priorities, setPriorities]);
+
 
   const addField = useCallback((field: string) => {
     if (!selectedFields.includes(field)) {
@@ -216,9 +215,11 @@ export default function PriorityManager() {
   }, [selectedFields]);
 
   const removeField = useCallback((field: string) => {
-    setSelectedFields(prev => prev.filter(f => f !== field));
-    setPriorities(prev => prev.filter(p => p.field !== field));
-  }, [setPriorities]);
+  setSelectedFields(prev => prev.filter(f => f !== field));
+  const newPriorities = priorities.filter(p => p.field !== field);
+  setPriorities(newPriorities);
+}, [priorities, setPriorities]);
+
 
   // Drag and Drop for ranking
   const handleDragStart = (field: string) => {

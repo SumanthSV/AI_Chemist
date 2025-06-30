@@ -94,12 +94,31 @@ export default function DataGridWrapper({ fileId, searchResults }: DataGridWrapp
   }, [file, fileId, validationResults, files, crossFileResults]);
 
   const generateAIInsights = (results: any, file: any) => {
-    const insights = {
-      dataQuality: Math.round(((file.data.length - results.summary.totalIssues) / file.data.length) * 100),
-      recommendations: [],
-      patterns: [],
-      optimizations: []
-    };
+    const insights: {
+    dataQuality: number;
+    recommendations: {
+      type: string;
+      title: string;
+      description: string;
+      action: string;
+    }[];
+    patterns: {
+      type: string;
+      title: string;
+      count: number;
+      impact: string;
+    }[];
+    optimizations: {
+      type: string;
+      title: string;
+      description: string;
+    }[];
+  } = {
+    dataQuality: Math.round(((file.data.length - results.summary.totalIssues) / file.data.length) * 100),
+    recommendations: [],
+    patterns: [],
+    optimizations: []
+  };
 
     // Generate recommendations based on validation results
     if (results.summary.errorCount > 0) {

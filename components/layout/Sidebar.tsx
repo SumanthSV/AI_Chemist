@@ -43,7 +43,7 @@ export default function Sidebar() {
             Workflow Progress
           </h2>
           <div className="relative">
-            <Progress value={progress} className="h-3 bg-gray-200" />
+            <Progress value={Math.max(0, Math.min(100, progress || 0))} className="h-3 bg-gray-200" />
             <div 
               className="absolute top-0 left-0 h-3 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 transition-all duration-500 shadow-glow-purple"
               style={{ width: `${progress}%` }}

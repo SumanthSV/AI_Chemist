@@ -71,7 +71,7 @@ export default function ValidationSummary({ results, totalRows, fileName }: Vali
                 </Badge>
               </div>
             </div>
-            <Progress value={qualityScore} className="mt-3 h-2" />
+            <Progress value={Math.max(0, Math.min(100, qualityScore || 0))} className="mt-3 h-2" />
           </CardContent>
         </Card>
       </motion.div>

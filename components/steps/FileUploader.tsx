@@ -318,7 +318,7 @@ export default function FileUploader() {
                       </div>
                       <div className="space-y-3">
                         <p className="text-blue-700 font-semibold text-lg">AI Processing Files...</p>
-                        <Progress value={processingProgress} className="h-2" />
+                        <Progress value={Math.max(0, Math.min(100, processingProgress || 0))} className="h-2" />
                         <p className="text-sm text-blue-600">{Math.round(processingProgress)}% complete</p>
                       </div>
                     </div>

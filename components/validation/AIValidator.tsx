@@ -99,7 +99,7 @@ export default function AIValidator({
                 AI is analyzing your data...
               </span>
             </div>
-            <Progress value={progress} className="h-2" />
+            <Progress value={Math.max(0, Math.min(100, progress || 0))} className="h-2" />
             <p className="text-sm text-purple-600 mt-2">
               {progress < 30 ? 'Analyzing data patterns...' :
                progress < 60 ? 'Generating fix suggestions...' :

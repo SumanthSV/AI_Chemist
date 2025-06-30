@@ -701,13 +701,16 @@ export default function PriorityManager() {
                               <div className="space-y-2">
                                 <Label className="text-xs font-medium text-gray-500">KEY WEIGHTS:</Label>
                                 <div className="grid grid-cols-2 gap-2">
-                                  {Object.entries(preset.weights).slice(0, 4).map(([field, config]) => (
-                                    <div key={field} className="flex items-center justify-between text-xs">
-                                      <span className="truncate">{field}</span>
-                                      <Badge variant="outline" className="text-xs">
-                                        {config.weight}%
-                                      </Badge>
-                                    </div>
+                                  {Object.entries(preset.weights)
+                                    .filter(([, config]) => config !== undefined)
+                                    .slice(0, 4)
+                                    .map(([field, config]) => (
+                                      <div key={field} className="flex items-center justify-between text-xs">
+                                        <span className="truncate">{field}</span>
+                                        <Badge variant="outline" className="text-xs">
+                                          {config!.weight}%
+                                        </Badge>
+                                      </div>
                                   ))}
                                 </div>
                               </div>

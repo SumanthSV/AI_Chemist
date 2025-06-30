@@ -184,7 +184,7 @@ export default function PriorityManager() {
         weight: presetWeight?.weight || 50,
         type: presetWeight?.type || getDefaultType(field) as 'maximize' | 'minimize',
         description: fieldInfo?.description,
-        category: fieldInfo?.category
+        category: fieldInfo?.category as 'fulfillment' | 'fairness' | 'workload' | 'quality' | undefined
       };
     });
 

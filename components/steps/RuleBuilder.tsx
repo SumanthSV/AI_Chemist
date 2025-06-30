@@ -752,20 +752,22 @@ export default function RuleBuilder() {
                                 )}
                                 
                                 <div className="text-xs text-gray-500">
-                                  Created: {rule.createdAt.toLocaleDateString()} • 
-                                  Modified: {rule.lastModified.toLocaleDateString()}
+                                  Created: {rule.createdAt?.toLocaleDateString() ?? 'N/A'} • • 
+                                  Modified: {rule.lastModified?.toLocaleDateString() ?? 'N/A'}
                                 </div>
                               </div>
                               
                               <div className="flex gap-2 ml-4">
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() => testRule(rule)}
-                                  title="Test Rule"
-                                >
-                                  <TestTube className="h-4 w-4" />
-                                </Button>
+                                {['coRun', 'phaseWindow', 'loadLimit', 'slotRestriction', 'patternMatch', 'precedence', 'aiGenerated'].includes(rule.type) && (
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => testRule(rule as BusinessRule)}
+                                    title="Test Rule"
+                                  >
+                                    <TestTube className="h-4 w-4" />
+                                  </Button>
+                                )}
                                 <Button
                                   size="sm"
                                   variant="outline"

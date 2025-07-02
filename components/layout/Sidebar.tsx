@@ -35,21 +35,21 @@ export default function Sidebar() {
   const progress = ((currentStep + 1) / steps.length) * 100;
 
   return (
-    <div className="w-72 bg-white/90 backdrop-blur-sm border-r h-[calc(100vh-4rem)] sticky top-16 p-6 shadow-lg">
+    <div className="w-64 sm:w-72 bg-white/90 backdrop-blur-sm border-r h-[calc(100vh-4rem)] sticky top-16 p-4 sm:p-6 shadow-lg">
       <div className="absolute inset-0 bg-gradient-to-b from-purple-50/50 to-blue-50/50"></div>
-      <div className="relative space-y-6">
-        <div className="space-y-3">
-          <h2 className="text-lg font-semibold text-gray-900">
+      <div className="relative space-y-4 sm:space-y-6">
+        <div className="space-y-2 sm:space-y-3">
+          <h2 className="text-base sm:text-lg font-semibold text-gray-900">
             Workflow Progress
           </h2>
           <div className="relative">
-            <Progress value={Math.max(0, Math.min(100, progress || 0))} className="h-3 bg-gray-200" />
+            <Progress value={Math.max(0, Math.min(100, progress || 0))} className="h-2 sm:h-3 bg-gray-200" />
             <div 
-              className="absolute top-0 left-0 h-3 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 transition-all duration-500 shadow-glow-purple"
+              className="absolute top-0 left-0 h-2 sm:h-3 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 transition-all duration-500 shadow-glow-purple"
               style={{ width: `${progress}%` }}
             ></div>
           </div>
-          <p className="text-sm text-gray-600">
+          <p className="text-xs sm:text-sm text-gray-600">
             Step {currentStep + 1} of {steps.length}
           </p>
         </div>
@@ -73,7 +73,7 @@ export default function Sidebar() {
                 <Button
                   variant={isActive ? "default" : "ghost"}
                   size="sm"
-                  className={`w-full justify-start gap-3 h-12 transition-all duration-200 ${
+                  className={`w-full justify-start gap-2 sm:gap-3 h-10 sm:h-12 transition-all duration-200 text-xs sm:text-sm ${
                     isActive 
                       ? `bg-gradient-to-r ${colorClass} text-white shadow-lg hover:shadow-xl` 
                       : isCompleted 
@@ -90,19 +90,19 @@ export default function Sidebar() {
                         ? 'bg-green-100' 
                         : 'bg-gray-100'
                   }`}>
-                    <Icon className={`h-4 w-4 ${
+                    <Icon className={`h-3 w-3 sm:h-4 sm:w-4 ${
                       isCompleted ? 'text-green-600' : 
                       isActive ? 'text-white' : 'text-gray-500'
                     }`} />
                   </div>
-                  <span className="flex-1 text-left font-medium">{step}</span>
+                  <span className="flex-1 text-left font-medium truncate">{step}</span>
                   {isCompleted && (
                     <div className="p-1 bg-green-100 rounded-full">
-                      <CheckCircle2 className="h-4 w-4 text-green-600" />
+                      <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 text-green-600" />
                     </div>
                   )}
                   {isActive && (
-                    <ChevronRight className="h-4 w-4 text-white" />
+                    <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
                   )}
                 </Button>
                 
@@ -121,7 +121,7 @@ export default function Sidebar() {
         
         {files.length > 0 && (
           <div className="pt-4 border-t border-gray-200">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+            <h3 className="text-xs sm:text-sm font-semibold text-gray-700 mb-2 sm:mb-3 flex items-center gap-2">
               <div className="w-2 h-2 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse"></div>
               Uploaded Files
             </h3>
@@ -132,17 +132,17 @@ export default function Sidebar() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="flex items-center gap-2 p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200 hover:shadow-md transition-all duration-200"
+                  className="flex items-center gap-2 p-2 sm:p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200 hover:shadow-md transition-all duration-200"
                 >
                   <div className="p-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded">
-                    <Upload className="h-3 w-3 text-white" />
+                    <Upload className="h-2 w-2 sm:h-3 sm:w-3 text-white" />
                   </div>
-                  <span className="text-sm text-gray-700 truncate flex-1">
+                  <span className="text-xs sm:text-sm text-gray-700 truncate flex-1" title={file.name}>
                     {file.name}
                   </span>
                   {file.processed && (
                     <div className="p-1 bg-green-100 rounded-full">
-                      <CheckCircle2 className="h-3 w-3 text-green-600" />
+                      <CheckCircle2 className="h-2 w-2 sm:h-3 sm:w-3 text-green-600" />
                     </div>
                   )}
                 </motion.div>

@@ -67,7 +67,19 @@ export default function AiAssistant() {
   const [inputValue, setInputValue] = useState('');
   const [isMinimized, setIsMinimized] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Check if mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -108,6 +120,7 @@ export default function AiAssistant() {
     let insights: ChatMessage['insights'] = undefined;
 
     // Enhanced AI insights with visual components
+    
     if (lowerMessage.includes('schema') || lowerMessage.includes('detect') || lowerMessage.includes('pattern')) {
       response = 'I\'ve analyzed your data schema! I found key columns, data types, and patterns. I can identify primary keys, foreign key relationships, and suggest normalization opportunities.';
       suggestions = ['Run full schema analysis', 'Detect key columns', 'Find data patterns', 'Suggest normalization'];
@@ -326,26 +339,35 @@ export default function AiAssistant() {
 
   return (
     <motion.div
-      initial={{ x: 320 }}
+      initial={{ x: isMobile ? '100%' : 320 }}
       animate={{ x: 0 }}
-      exit={{ x: 320 }}
-      className="fixed right-0 top-16 h-[calc(100vh-4rem)] w-80 bg-gradient-to-b from-white to-blue-50 border-l shadow-xl z-40"
+      exit={{ x: isMobile ? '100%' : 320 }}
+      className={`
+        ${isMobile 
+          ? 'fixed inset-0 z-50 bg-white' 
+          : 'fixed right-0 top-16 h-[calc(100vh-4rem)] w-80'
+        }
+        bg-gradient-to-b from-white to-blue-50 border-l shadow-xl
+      `}
     >
       <Card className="h-full rounded-none border-0 bg-transparent">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white">
-          <CardTitle className="flex items-center gap-2 text-lg font-bold">
-            <Sparkles className="h-5 w-5" />
-            AI Data Assistant
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg font-bold">
+            <Sparkles className="h-4 w-4 sm:h-5 sm:w-5" />
+            <span className="hidden sm:inline">AI Data Assistant</span>
+            <span className="sm:hidden">AI Assistant</span>
           </CardTitle>
           <div className="flex gap-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsMinimized(!isMinimized)}
-              className="text-white hover:bg-white/20"
-            >
-              {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
-            </Button>
+            {!isMobile && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsMinimized(!isMinimized)}
+                className="text-white hover:bg-white/20"
+              >
+                {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
+              </Button>
+            )}
             <Button
               variant="ghost"
               size="sm"
@@ -357,36 +379,36 @@ export default function AiAssistant() {
           </div>
         </CardHeader>
 
-        {!isMinimized && (
+        {(!isMinimized || isMobile) && (
           <CardContent className="p-0 flex flex-col h-[calc(100%-4rem)]">
             {/* Context Help */}
-            <div className="p-4 bg-gradient-to-r from-purple-50 to-blue-50 border-b">
+            <div className="p-3 sm:p-4 bg-gradient-to-r from-purple-50 to-blue-50 border-b">
               <div className="flex items-start gap-2">
-                <Bot className="h-4 w-4 text-purple-600 mt-0.5" />
-                <p className="text-sm text-purple-800 font-medium">{getContextualHelp()}</p>
+                <Bot className="h-3 w-3 sm:h-4 sm:w-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                <p className="text-xs sm:text-sm text-purple-800 font-medium">{getContextualHelp()}</p>
               </div>
             </div>
 
             {/* Messages */}
-            <ScrollArea className="flex-1 p-4">
-              <div className="space-y-4">
+            <ScrollArea className="flex-1 p-3 sm:p-4">
+              <div className="space-y-3 sm:space-y-4">
                 {messages.map((message) => (
                   <motion.div
                     key={message.id}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className={`flex gap-3 ${
+                    className={`flex gap-2 sm:gap-3 ${
                       message.type === 'user' ? 'justify-end' : 'justify-start'
                     }`}
                   >
                     {message.type === 'assistant' && (
-                      <div className="w-8 h-8 bg-gradient-to-br from-purple-100 to-blue-100 rounded-full flex items-center justify-center flex-shrink-0 border-2 border-purple-200">
-                        <Bot className="h-4 w-4 text-purple-600" />
+                      <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-purple-100 to-blue-100 rounded-full flex items-center justify-center flex-shrink-0 border-2 border-purple-200">
+                        <Bot className="h-3 w-3 sm:h-4 sm:w-4 text-purple-600" />
                       </div>
                     )}
                     
                     <div
-                      className={`max-w-[85%] rounded-xl p-4 shadow-sm ${
+                      className={`max-w-[85%] rounded-xl p-3 sm:p-4 shadow-sm ${
                         message.type === 'user'
                           ? 'bg-gradient-to-br from-blue-600 to-purple-600 text-white'
                           : 'bg-white border border-gray-200'
@@ -396,7 +418,7 @@ export default function AiAssistant() {
                         <div className="flex items-center gap-2 mb-2">
                           {(() => {
                             const IconComponent = getActionIcon(message.actionType);
-                            return <IconComponent className="h-4 w-4" />;
+                            return <IconComponent className="h-3 w-3 sm:h-4 sm:w-4" />;
                           })()}
                           <Badge variant="outline" className="text-xs">
                             {message.actionType}
@@ -404,7 +426,7 @@ export default function AiAssistant() {
                         </div>
                       )}
                       
-                      <p className={`text-sm leading-relaxed ${
+                      <p className={`text-xs sm:text-sm leading-relaxed ${
                         message.type === 'user' ? 'text-white' : 'text-gray-800'
                       }`}>
                         {message.content}
@@ -412,25 +434,25 @@ export default function AiAssistant() {
 
                       {/* AI Insights Panel */}
                       {message.insights && message.type === 'assistant' && (
-                        <div className={`mt-4 p-3 rounded-lg border ${getInsightColor(message.insights.type)}`}>
+                        <div className={`mt-3 sm:mt-4 p-2 sm:p-3 rounded-lg border ${getInsightColor(message.insights.type)}`}>
                           <div className="flex items-center gap-2 mb-2">
                             {(() => {
                               const IconComponent = getInsightIcon(message.insights.type);
-                              return <IconComponent className="h-4 w-4" />;
+                              return <IconComponent className="h-3 w-3 sm:h-4 sm:w-4" />;
                             })()}
-                            <span className="font-medium text-sm">{message.insights.title}</span>
+                            <span className="font-medium text-xs sm:text-sm">{message.insights.title}</span>
                           </div>
-                          <p className="text-xs mb-3">{message.insights.description}</p>
+                          <p className="text-xs mb-2 sm:mb-3">{message.insights.description}</p>
                           
                           {message.insights.metrics && (
-                            <div className="grid grid-cols-2 gap-2">
+                            <div className="grid grid-cols-2 gap-1 sm:gap-2">
                               {message.insights.metrics.map((metric, index) => (
-                                <div key={index} className="bg-white/50 rounded p-2">
+                                <div key={index} className="bg-white/50 rounded p-1.5 sm:p-2">
                                   <div className="flex items-center justify-between">
-                                    <span className="text-xs font-medium">{metric.label}</span>
+                                    <span className="text-xs font-medium truncate">{metric.label}</span>
                                     <span className="text-xs">{getTrendIcon(metric.trend)}</span>
                                   </div>
-                                  <div className="text-sm font-bold mt-1">{metric.value}</div>
+                                  <div className="text-xs sm:text-sm font-bold mt-1">{metric.value}</div>
                                 </div>
                               ))}
                             </div>
@@ -439,19 +461,19 @@ export default function AiAssistant() {
                       )}
                       
                       {message.suggestions && (
-                        <div className="mt-3 space-y-2">
+                        <div className="mt-2 sm:mt-3 space-y-1 sm:space-y-2">
                           {message.suggestions.map((suggestion, index) => (
                             <button
                               key={index}
                               onClick={() => handleSuggestionClick(suggestion)}
-                              className="block w-full text-left text-xs bg-gray-100 hover:bg-gray-200 rounded-lg px-3 py-2 transition-colors border border-gray-200 hover:border-gray-300"
+                              className="block w-full text-left text-xs bg-gray-100 hover:bg-gray-200 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 transition-colors border border-gray-200 hover:border-gray-300"
                             >
                               <div className="flex items-center gap-2">
                                 {(() => {
                                   const IconComponent = getActionIcon(message.actionType);
-                                  return <IconComponent className="h-3 w-3" />;
+                                  return <IconComponent className="h-2 w-2 sm:h-3 sm:w-3 flex-shrink-0" />;
                                 })()}
-                                <span>{suggestion}</span>
+                                <span className="truncate">{suggestion.length > 30 ? `${suggestion.substring(0, 30)}...` : suggestion}</span>
                               </div>
                             </button>
                           ))}
@@ -460,8 +482,8 @@ export default function AiAssistant() {
                     </div>
                     
                     {message.type === 'user' && (
-                      <div className="w-8 h-8 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center flex-shrink-0 border-2 border-blue-200">
-                        <User className="h-4 w-4 text-blue-600" />
+                      <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center flex-shrink-0 border-2 border-blue-200">
+                        <User className="h-3 w-3 sm:h-4 sm:w-4 text-blue-600" />
                       </div>
                     )}
                   </motion.div>
@@ -471,12 +493,12 @@ export default function AiAssistant() {
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="flex gap-3"
+                    className="flex gap-2 sm:gap-3"
                   >
-                    <div className="w-8 h-8 bg-gradient-to-br from-purple-100 to-blue-100 rounded-full flex items-center justify-center border-2 border-purple-200">
-                      <Bot className="h-4 w-4 text-purple-600" />
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-purple-100 to-blue-100 rounded-full flex items-center justify-center border-2 border-purple-200">
+                      <Bot className="h-3 w-3 sm:h-4 sm:w-4 text-purple-600" />
                     </div>
-                    <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+                    <div className="bg-white rounded-xl p-3 sm:p-4 border border-gray-200 shadow-sm">
                       <div className="flex gap-1">
                         <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce"></div>
                         <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
@@ -491,22 +513,22 @@ export default function AiAssistant() {
             </ScrollArea>
 
             {/* Input */}
-            <div className="p-4 border-t bg-white">
+            <div className="p-3 sm:p-4 border-t bg-white">
               <div className="flex gap-2">
                 <Input
                   placeholder="Ask about schema, relationships, rules..."
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                  className="flex-1 border-gray-300 focus:border-purple-500"
+                  className="flex-1 border-gray-300 focus:border-purple-500 text-xs sm:text-sm h-8 sm:h-10"
                 />
                 <Button
                   size="sm"
                   onClick={() => handleSendMessage()}
                   disabled={!inputValue.trim()}
-                  className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                  className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 h-8 sm:h-10 px-2 sm:px-3"
                 >
-                  <Send className="h-4 w-4" />
+                  <Send className="h-3 w-3 sm:h-4 sm:w-4" />
                 </Button>
               </div>
             </div>

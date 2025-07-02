@@ -110,49 +110,52 @@ export default function Navbar() {
 
   return (
     <nav className="border-b bg-white/95 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
-      <div className="flex h-16 items-center justify-between px-6">
-        <div className="flex items-center gap-3">
+      <div className="flex h-16 items-center justify-between px-4 sm:px-6">
+        <div className="flex items-center gap-2 sm:gap-3">
           <div className="flex items-center gap-2">
-            <div className="p-2 bg-gradient-to-br from-slate-600 to-blue-600 rounded-lg shadow-sm">
-              <Sparkles className="h-6 w-6 text-white" />
+            <div className="p-1.5 sm:p-2 bg-gradient-to-br from-slate-600 to-blue-600 rounded-lg shadow-sm">
+              <Sparkles className="h-4 w-4 sm:h-6 sm:w-6 text-white" />
             </div>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-slate-800 to-blue-600 bg-clip-text text-transparent">
-              Data Alchemist
+            <h1 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-slate-800 to-blue-600 bg-clip-text text-transparent">
+              <span className="hidden sm:inline">Data Alchemist</span>
+              <span className="sm:hidden">DA</span>
             </h1>
           </div>
         </div>
         
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
           <Dialog open={showRoadmap} onOpenChange={setShowRoadmap}>
             <DialogTrigger asChild>
-              <Button variant="ghost" size="sm" className="hover:bg-gray-100 transition-all duration-200">
-                <HelpCircle className="h-4 w-4 mr-2" />
-                How It Works
+              <Button variant="ghost" size="sm" className="hover:bg-gray-100 transition-all duration-200 text-xs sm:text-sm">
+                <HelpCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">How It Works</span>
+                <span className="sm:hidden">Help</span>
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-4xl max-h-[80vh] p-0">
-              <DialogHeader className="p-6 pb-4 bg-gradient-to-r from-slate-800 to-blue-600 text-white">
-                <DialogTitle className="text-2xl font-bold flex items-center gap-3">
-                  <Sparkles className="h-6 w-6" />
-                  Data Alchemist - Complete Feature Roadmap
+            <DialogContent className="max-w-4xl max-h-[80vh] p-0 mx-4">
+              <DialogHeader className="p-4 sm:p-6 pb-4 bg-gradient-to-r from-slate-800 to-blue-600 text-white">
+                <DialogTitle className="text-xl sm:text-2xl font-bold flex items-center gap-2 sm:gap-3">
+                  <Sparkles className="h-5 w-5 sm:h-6 sm:w-6" />
+                  <span className="hidden sm:inline">Data Alchemist - Complete Feature Roadmap</span>
+                  <span className="sm:hidden">Feature Roadmap</span>
                 </DialogTitle>
-                <p className="text-blue-100 mt-2">
+                <p className="text-blue-100 mt-2 text-sm sm:text-base">
                   Transform your raw data into valuable insights with AI-powered processing
                 </p>
               </DialogHeader>
               
-              <ScrollArea className="h-[60vh] p-6">
-                <div className="space-y-8">
+              <ScrollArea className="h-[60vh] p-4 sm:p-6">
+                <div className="space-y-6 sm:space-y-8">
                   {roadmapFeatures.map((category, categoryIndex) => {
                     const CategoryIcon = category.icon;
                     return (
                       <div key={category.category} className="space-y-4">
-                        <div className="flex items-center gap-3 mb-4">
-                          <div className={`p-3 rounded-lg bg-gradient-to-r ${category.color} shadow-lg`}>
-                            <CategoryIcon className="h-6 w-6 text-white" />
+                        <div className="flex items-center gap-2 sm:gap-3 mb-4">
+                          <div className={`p-2 sm:p-3 rounded-lg bg-gradient-to-r ${category.color} shadow-lg`}>
+                            <CategoryIcon className="h-4 w-4 sm:h-6 sm:w-6 text-white" />
                           </div>
                           <div>
-                            <h3 className="text-xl font-bold text-gray-900">{category.category}</h3>
+                            <h3 className="text-lg sm:text-xl font-bold text-gray-900">{category.category}</h3>
                             <div className="flex items-center gap-2 mt-1">
                               <Badge variant="outline" className="text-xs">
                                 {category.features.length} features
@@ -167,19 +170,19 @@ export default function Navbar() {
                           </div>
                         </div>
                         
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ml-4 pl-4 border-l-2 border-gray-200">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 ml-2 sm:ml-4 pl-2 sm:pl-4 border-l-2 border-gray-200">
                           {category.features.map((feature, featureIndex) => {
                             const FeatureIcon = feature.icon;
                             return (
                               <div 
                                 key={feature.name}
-                                className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                                className="flex items-start gap-2 sm:gap-3 p-3 sm:p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                               >
-                                <div className="p-2 bg-white rounded-lg shadow-sm">
-                                  <FeatureIcon className="h-4 w-4 text-gray-600" />
+                                <div className="p-1.5 sm:p-2 bg-white rounded-lg shadow-sm">
+                                  <FeatureIcon className="h-3 w-3 sm:h-4 sm:w-4 text-gray-600" />
                                 </div>
-                                <div className="flex-1">
-                                  <h4 className="font-semibold text-gray-900 text-sm">{feature.name}</h4>
+                                <div className="flex-1 min-w-0">
+                                  <h4 className="font-semibold text-gray-900 text-xs sm:text-sm">{feature.name}</h4>
                                   <p className="text-xs text-gray-600 mt-1">{feature.description}</p>
                                 </div>
                               </div>
@@ -191,23 +194,23 @@ export default function Navbar() {
                   })}
                 </div>
                 
-                <div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200">
-                  <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
-                    <TrendingUp className="h-5 w-5 text-blue-600" />
+                <div className="mt-6 sm:mt-8 p-4 sm:p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200">
+                  <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+                    <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
                     Why Choose Data Alchemist?
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-blue-600">95%</div>
-                      <div className="text-sm text-gray-600">Data Quality Improvement</div>
+                      <div className="text-xl sm:text-2xl font-bold text-blue-600">95%</div>
+                      <div className="text-xs sm:text-sm text-gray-600">Data Quality Improvement</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-green-600">80%</div>
-                      <div className="text-sm text-gray-600">Time Savings</div>
+                      <div className="text-xl sm:text-2xl font-bold text-green-600">80%</div>
+                      <div className="text-xs sm:text-sm text-gray-600">Time Savings</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-purple-600">100%</div>
-                      <div className="text-sm text-gray-600">AI-Powered</div>
+                      <div className="text-xl sm:text-2xl font-bold text-purple-600">100%</div>
+                      <div className="text-xs sm:text-sm text-gray-600">AI-Powered</div>
                     </div>
                   </div>
                 </div>
@@ -219,21 +222,23 @@ export default function Navbar() {
             variant="ghost" 
             size="sm"
             onClick={toggleAiAssistant}
-            className="hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 relative"
+            className="hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 relative text-xs sm:text-sm"
           >
-            <MessageSquare className="h-4 w-4 mr-2" />
-            AI Chat
-            <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+            <MessageSquare className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+            <span className="hidden sm:inline">AI Chat</span>
+            <span className="sm:hidden">AI</span>
+            <div className="absolute -top-1 -right-1 w-2 h-2 sm:w-3 sm:h-3 bg-green-500 rounded-full animate-pulse"></div>
           </Button>
           
           <Button 
             variant="ghost" 
             size="sm"
             disabled={currentStep < 4}
-            className="hover:bg-green-50 hover:text-green-700 transition-all duration-200 disabled:opacity-50"
+            className="hover:bg-green-50 hover:text-green-700 transition-all duration-200 disabled:opacity-50 text-xs sm:text-sm"
           >
-            <Download className="h-4 w-4 mr-2" />
-            Export
+            <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+            <span className="hidden sm:inline">Export</span>
+            <span className="sm:hidden">Export</span>
           </Button>
         </div>
       </div>

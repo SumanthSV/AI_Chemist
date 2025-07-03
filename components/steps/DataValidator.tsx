@@ -571,8 +571,8 @@ export default function DataValidator() {
         </Button>
       </div>
       </div>
-
       </div>
+    </div>
     </div>
   );
 }

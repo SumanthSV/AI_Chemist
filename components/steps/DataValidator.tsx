@@ -355,10 +355,8 @@ export default function DataValidator() {
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] overflow-hidden">
-      <div className="flex-1 max-w-[calc(90vw-16rem)] bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 bg-pattern-dots overflow-x-hidden">
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
 
-    <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 bg-pattern-dots overflow-x-hidden">c0f8b1b475f0adec2ad136fdd4d8c1ccf959fd1d
+      <div className="flex-1 min-h-[calc(100vh-4rem)] bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 bg-pattern-dots overflow-x-hidden max-w-full sm:max-w-[calc(90vw-16rem)] mx-auto">
       {/* Main Container with Mobile Optimization */}
       <div className="w-full mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
         
@@ -569,8 +567,6 @@ export default function DataValidator() {
           Continue to Rules
           <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 ml-2" />
         </Button>
-      </div>
-      </div>
       </div>
     </div>
     </div>

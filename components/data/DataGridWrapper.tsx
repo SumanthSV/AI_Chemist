@@ -59,8 +59,20 @@ export default function DataGridWrapper({ fileId, searchResults }: DataGridWrapp
   const [showAISuggestions, setShowAISuggestions] = useState(true);
   const [showCrossFileValidation, setShowCrossFileValidation] = useState(true);
   const [aiInsights, setAiInsights] = useState<any>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   const file = files.find(f => f.id === fileId);
+  
+  // Check if mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   
   if (!file) return null;
 
@@ -80,9 +92,11 @@ export default function DataGridWrapper({ fileId, searchResults }: DataGridWrapp
         setCrossFileResults(crossResults);
       }
 
-      // Generate AI insights
-      const insights = generateAIInsights(results, file);
-      setAiInsights(insights);
+      // Generate AI insights only on desktop
+      if (!isMobile) {
+        const insights = generateAIInsights(results, file);
+        setAiInsights(insights);
+      }
       
       const totalIssues = results.summary.totalIssues + (crossFileResults?.summary.totalIssues || 0);
       toast.success(`Validation complete: ${totalIssues} total issues found`);
@@ -91,7 +105,7 @@ export default function DataGridWrapper({ fileId, searchResults }: DataGridWrapp
     } finally {
       setIsValidating(false);
     }
-  }, [file, fileId, validationResults, files, crossFileResults]);
+  }, [file, fileId, validationResults, files, crossFileResults, isMobile]);
 
   const generateAIInsights = (results: any, file: any) => {
     const insights: {
@@ -249,14 +263,14 @@ export default function DataGridWrapper({ fileId, searchResults }: DataGridWrapp
     : dataToDisplay;
 
   return (
-    <div className="w-full space-y-6">
-      {/* Enhanced Controls Header with AI Insights */}
+    <div className="w-full space-y-4 sm:space-y-6">
+      {/* Enhanced Controls Header - Mobile Optimized */}
       <Card className="shadow-lg border-2 border-blue-200">
-        <CardContent className="p-4">
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-            <div className="flex flex-wrap items-center gap-4">
+        <CardContent className="p-3 sm:p-4">
+          <div className="flex flex-col gap-3 sm:gap-4">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-700 whitespace-nowrap">Auto-validate</span>
+                <span className="text-xs sm:text-sm font-medium text-gray-700 whitespace-nowrap">Auto-validate</span>
                 <Switch 
                   checked={validationEnabled} 
                   onCheckedChange={toggleValidation}
@@ -264,7 +278,7 @@ export default function DataGridWrapper({ fileId, searchResults }: DataGridWrapp
               </div>
               
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-700 whitespace-nowrap">Real-time</span>
+                <span className="text-xs sm:text-sm font-medium text-gray-700 whitespace-nowrap">Real-time</span>
                 <Switch 
                   checked={autoValidateOnEdit} 
                   onCheckedChange={setAutoValidateOnEdit}
@@ -272,7 +286,7 @@ export default function DataGridWrapper({ fileId, searchResults }: DataGridWrapp
               </div>
               
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-700 whitespace-nowrap">Errors only</span>
+                <span className="text-xs sm:text-sm font-medium text-gray-700 whitespace-nowrap">Errors only</span>
                 <Switch 
                   checked={showErrorsOnly} 
                   onCheckedChange={setShowErrorsOnly}
@@ -280,18 +294,18 @@ export default function DataGridWrapper({ fileId, searchResults }: DataGridWrapp
               </div>
             </div>
 
-            <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex flex-wrap items-center gap-2">
               <Button
                 onClick={runValidation}
                 disabled={isValidating}
                 variant="outline"
                 size="sm"
-                className="hover-lift"
+                className="hover-lift text-xs sm:text-sm"
               >
                 {isValidating ? (
-                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                  <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 animate-spin" />
                 ) : (
-                  <RefreshCw className="h-4 w-4 mr-2" />
+                  <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                 )}
                 Re-run
               </Button>
@@ -300,25 +314,28 @@ export default function DataGridWrapper({ fileId, searchResults }: DataGridWrapp
                 onClick={handleAddRow}
                 variant="outline"
                 size="sm"
-                className="hover-lift"
+                className="hover-lift text-xs sm:text-sm"
               >
-                <Upload className="h-4 w-4 mr-2" />
+                <Upload className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                 Add Row
               </Button>
 
-              <AIValidator 
-                fileData={file.data}
-                headers={file.headers}
-                validationResults={currentResults}
-                onSuggestionsReceived={setAiFixSuggestions}
-              />
+              {/* AI Validator - Hidden on Mobile */}
+              {!isMobile && (
+                <AIValidator 
+                  fileData={file.data}
+                  headers={file.headers}
+                  validationResults={currentResults}
+                  onSuggestionsReceived={setAiFixSuggestions}
+                />
+              )}
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* AI Insights Panel */}
-      {aiInsights && (
+      {/* AI Insights Panel - Hidden on Mobile */}
+      {!isMobile && aiInsights && (
         <Card className="border-purple-200 bg-gradient-to-r from-purple-50 to-indigo-50 shadow-lg">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-purple-800 text-lg">
@@ -391,16 +408,17 @@ export default function DataGridWrapper({ fileId, searchResults }: DataGridWrapp
         </Card>
       )}
 
-      {/* Cross-File Validation Results - Scrollable Container */}
+      {/* Cross-File Validation Results - Mobile Optimized */}
       {crossFileResults && files.length > 1 && (
         <Card className="border-blue-200 bg-blue-50 shadow-lg">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center gap-2 text-blue-800 text-lg">
-                <Link className="h-5 w-5" />
-                Cross-File Validation Results
-                <Badge variant="outline" className="bg-blue-100 text-blue-800">
-                  {crossFileResults.summary.totalIssues} issues
+              <CardTitle className="flex items-center gap-2 text-blue-800 text-sm sm:text-lg">
+                <Link className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="hidden sm:inline">Cross-File Validation</span>
+                <span className="sm:hidden">Cross-File</span>
+                <Badge variant="outline" className="bg-blue-100 text-blue-800 text-xs">
+                  {crossFileResults.summary.totalIssues}
                 </Badge>
               </CardTitle>
               <Button
@@ -420,10 +438,9 @@ export default function DataGridWrapper({ fileId, searchResults }: DataGridWrapp
           
           {showCrossFileValidation && (
             <CardContent className="pt-0">
-              {/* Scrollable container with fixed height */}
               <div className="border border-blue-200 rounded-lg bg-white">
-                <ScrollArea className="h-80 w-full">
-                  <div className="p-4 space-y-3">
+                <ScrollArea className="h-40 sm:h-60 lg:h-80 w-full">
+                  <div className="p-2 sm:p-3 lg:p-4 space-y-2 sm:space-y-3">
                     {/* Cross-file errors */}
                     {crossFileResults.errors.map((error: any, index: number) => (
                       <motion.div
@@ -431,49 +448,34 @@ export default function DataGridWrapper({ fileId, searchResults }: DataGridWrapp
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.05 }}
-                        className="p-3 bg-red-50 border border-red-200 rounded-lg shadow-sm"
+                        className="p-2 sm:p-3 bg-red-50 border border-red-200 rounded-lg shadow-sm"
                       >
-                        <div className="flex items-start gap-3">
+                        <div className="flex items-start gap-2 sm:gap-3">
                           <div className="p-1 bg-red-100 rounded-full flex-shrink-0">
-                            <AlertTriangle className="h-4 w-4 text-red-600" />
+                            <AlertTriangle className="h-3 w-3 sm:h-4 sm:w-4 text-red-600" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-1">
-                              <Badge variant="destructive" className="text-xs px-2 py-0">
+                            <div className="flex flex-wrap items-center gap-1 sm:gap-2 mb-1">
+                              <Badge variant="destructive" className="text-xs px-1 sm:px-2 py-0">
                                 ERROR
                               </Badge>
-                              <Badge variant="outline" className="text-xs px-2 py-0 bg-red-100 text-red-700 border-red-300">
+                              <Badge variant="outline" className="text-xs px-1 sm:px-2 py-0 bg-red-100 text-red-700 border-red-300">
                                 {error.type}
                               </Badge>
                             </div>
-                            <p className="text-sm font-medium text-red-800 mb-2">{error.message}</p>
+                            <p className="text-xs sm:text-sm font-medium text-red-800 mb-1 sm:mb-2 break-words">{error.message}</p>
                             {error.location && (
-                              <div className="flex items-center gap-2 text-xs text-red-600 mb-2">
+                              <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-xs text-red-600 mb-1 sm:mb-2">
                                 <FileText className="h-3 w-3" />
-                                <span className="font-medium">{error.location.fileName}</span>
+                                <span className="font-medium truncate">{error.location.fileName}</span>
                                 <span>•</span>
                                 <span>Row {error.location.row + 1}</span>
                                 <span>•</span>
-                                <span className="font-mono bg-red-100 px-1 rounded">{error.location.column}</span>
-                              </div>
-                            )}
-                            {error.relatedFiles && (
-                              <div className="flex items-center gap-2 mt-2">
-                                <Database className="h-3 w-3 text-red-600 flex-shrink-0" />
-                                <span className="text-xs text-red-600">
-                                  Related files: 
-                                </span>
-                                <div className="flex flex-wrap gap-1">
-                                  {error.relatedFiles.map((fileName: string, idx: number) => (
-                                    <Badge key={idx} variant="outline" className="text-xs px-1 py-0 bg-red-100 text-red-700 border-red-300">
-                                      {fileName}
-                                    </Badge>
-                                  ))}
-                                </div>
+                                <span className="font-mono bg-red-100 px-1 rounded truncate">{error.location.column}</span>
                               </div>
                             )}
                             {error.value && (
-                              <div className="mt-2 p-2 bg-red-100 rounded text-xs font-mono text-red-800 break-all">
+                              <div className="mt-2 p-2 bg-red-100 rounded text-xs font-mono text-red-800 break-all max-h-16 overflow-y-auto">
                                 Value: {String(error.value)}
                               </div>
                             )}
@@ -489,103 +491,35 @@ export default function DataGridWrapper({ fileId, searchResults }: DataGridWrapp
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: (crossFileResults.errors.length + index) * 0.05 }}
-                        className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg shadow-sm"
+                        className="p-2 sm:p-3 bg-yellow-50 border border-yellow-200 rounded-lg shadow-sm"
                       >
-                        <div className="flex items-start gap-3">
+                        <div className="flex items-start gap-2 sm:gap-3">
                           <div className="p-1 bg-yellow-100 rounded-full flex-shrink-0">
-                            <AlertTriangle className="h-4 w-4 text-yellow-600" />
+                            <AlertTriangle className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-600" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-1">
-                              <Badge variant="secondary" className="text-xs px-2 py-0 bg-yellow-200 text-yellow-800">
+                            <div className="flex flex-wrap items-center gap-1 sm:gap-2 mb-1">
+                              <Badge variant="secondary" className="text-xs px-1 sm:px-2 py-0 bg-yellow-200 text-yellow-800">
                                 WARNING
                               </Badge>
-                              <Badge variant="outline" className="text-xs px-2 py-0 bg-yellow-100 text-yellow-700 border-yellow-300">
+                              <Badge variant="outline" className="text-xs px-1 sm:px-2 py-0 bg-yellow-100 text-yellow-700 border-yellow-300">
                                 {warning.type}
                               </Badge>
                             </div>
-                            <p className="text-sm font-medium text-yellow-800 mb-2">{warning.message}</p>
+                            <p className="text-xs sm:text-sm font-medium text-yellow-800 mb-1 sm:mb-2 break-words">{warning.message}</p>
                             {warning.location && (
-                              <div className="flex items-center gap-2 text-xs text-yellow-600 mb-2">
+                              <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-xs text-yellow-600 mb-1 sm:mb-2">
                                 <FileText className="h-3 w-3" />
-                                <span className="font-medium">{warning.location.fileName}</span>
+                                <span className="font-medium truncate">{warning.location.fileName}</span>
                                 <span>•</span>
                                 <span>Row {warning.location.row + 1}</span>
                                 <span>•</span>
-                                <span className="font-mono bg-yellow-100 px-1 rounded">{warning.location.column}</span>
-                              </div>
-                            )}
-                            {warning.relatedFiles && (
-                              <div className="flex items-center gap-2 mt-2">
-                                <Database className="h-3 w-3 text-yellow-600 flex-shrink-0" />
-                                <span className="text-xs text-yellow-600">
-                                  Related files: 
-                                </span>
-                                <div className="flex flex-wrap gap-1">
-                                  {warning.relatedFiles.map((fileName: string, idx: number) => (
-                                    <Badge key={idx} variant="outline" className="text-xs px-1 py-0 bg-yellow-100 text-yellow-700 border-yellow-300">
-                                      {fileName}
-                                    </Badge>
-                                  ))}
-                                </div>
+                                <span className="font-mono bg-yellow-100 px-1 rounded truncate">{warning.location.column}</span>
                               </div>
                             )}
                             {warning.value && (
-                              <div className="mt-2 p-2 bg-yellow-100 rounded text-xs font-mono text-yellow-800 break-all">
+                              <div className="mt-2 p-2 bg-yellow-100 rounded text-xs font-mono text-yellow-800 break-all max-h-16 overflow-y-auto">
                                 Value: {String(warning.value)}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </motion.div>
-                    ))}
-
-                    {/* Cross-file info items */}
-                    {crossFileResults.info.map((info: any, index: number) => (
-                      <motion.div
-                        key={`info-${index}`}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: (crossFileResults.errors.length + crossFileResults.warnings.length + index) * 0.05 }}
-                        className="p-3 bg-blue-50 border border-blue-200 rounded-lg shadow-sm"
-                      >
-                        <div className="flex items-start gap-3">
-                          <div className="p-1 bg-blue-100 rounded-full flex-shrink-0">
-                            <AlertTriangle className="h-4 w-4 text-blue-600" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-1">
-                              <Badge variant="outline" className="text-xs px-2 py-0 bg-blue-100 text-blue-700 border-blue-300">
-                                INFO
-                              </Badge>
-                              <Badge variant="outline" className="text-xs px-2 py-0 bg-blue-100 text-blue-700 border-blue-300">
-                                {info.type}
-                              </Badge>
-                            </div>
-                            <p className="text-sm font-medium text-blue-800 mb-2">{info.message}</p>
-                            {info.location && (
-                              <div className="flex items-center gap-2 text-xs text-blue-600 mb-2">
-                                <FileText className="h-3 w-3" />
-                                <span className="font-medium">{info.location.fileName}</span>
-                                <span>•</span>
-                                <span>Row {info.location.row + 1}</span>
-                                <span>•</span>
-                                <span className="font-mono bg-blue-100 px-1 rounded">{info.location.column}</span>
-                              </div>
-                            )}
-                            {info.relatedFiles && (
-                              <div className="flex items-center gap-2 mt-2">
-                                <Database className="h-3 w-3 text-blue-600 flex-shrink-0" />
-                                <span className="text-xs text-blue-600">
-                                  Related files: 
-                                </span>
-                                <div className="flex flex-wrap gap-1">
-                                  {info.relatedFiles.map((fileName: string, idx: number) => (
-                                    <Badge key={idx} variant="outline" className="text-xs px-1 py-0 bg-blue-100 text-blue-700 border-blue-300">
-                                      {fileName}
-                                    </Badge>
-                                  ))}
-                                </div>
                               </div>
                             )}
                           </div>
@@ -595,10 +529,10 @@ export default function DataGridWrapper({ fileId, searchResults }: DataGridWrapp
 
                     {/* Empty state */}
                     {crossFileResults.errors.length === 0 && crossFileResults.warnings.length === 0 && crossFileResults.info.length === 0 && (
-                      <div className="text-center py-8 text-blue-600">
-                        <Check className="h-12 w-12 mx-auto mb-4 text-blue-400" />
-                        <p className="font-medium">No cross-file validation issues found!</p>
-                        <p className="text-sm text-blue-500 mt-1">All file references and relationships are valid.</p>
+                      <div className="text-center py-6 sm:py-8 text-blue-600">
+                        <Check className="h-8 w-8 sm:h-12 sm:w-12 mx-auto mb-3 sm:mb-4 text-blue-400" />
+                        <p className="font-medium text-sm sm:text-base">No cross-file validation issues found!</p>
+                        <p className="text-xs sm:text-sm text-blue-500 mt-1">All file references and relationships are valid.</p>
                       </div>
                     )}
                   </div>
@@ -606,12 +540,12 @@ export default function DataGridWrapper({ fileId, searchResults }: DataGridWrapp
               </div>
               
               {/* Summary footer */}
-              <div className="mt-3 p-3 bg-blue-100 rounded-lg border border-blue-200">
-                <div className="flex items-center justify-between text-sm">
+              <div className="mt-3 p-2 sm:p-3 bg-blue-100 rounded-lg border border-blue-200">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs sm:text-sm">
                   <span className="text-blue-800 font-medium">
                     Cross-file validation summary:
                   </span>
-                  <div className="flex items-center gap-4">
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-4">
                     <span className="text-red-700">
                       {crossFileResults.summary.errorCount} errors
                     </span>
@@ -636,9 +570,9 @@ export default function DataGridWrapper({ fileId, searchResults }: DataGridWrapp
         fileName={file.name}
       />
 
-      {/* AI Suggestions Panel - Fixed Width and Scrolling */}
+      {/* AI Suggestions Panel - Hidden on Mobile */}
       <AnimatePresence>
-        {aiFixSuggestions.length > 0 && (
+        {!isMobile && aiFixSuggestions.length > 0 && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
@@ -758,33 +692,33 @@ export default function DataGridWrapper({ fileId, searchResults }: DataGridWrapp
         )}
       </AnimatePresence>
 
-      {/* Data Grid - Constrained Width */}
+      {/* Data Grid - Mobile Optimized */}
       <Card className="shadow-lg">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2 min-w-0">
-              <span className="truncate text-lg" title={file.name}>
-                {file.name}
+              <span className="truncate text-sm sm:text-lg" title={file.name}>
+                {isMobile && file.name.length > 15 ? `${file.name.substring(0, 15)}...` : file.name}
               </span>
-              <Badge variant="outline" className="flex-shrink-0">
+              <Badge variant="outline" className="flex-shrink-0 text-xs">
                 {filteredData.length} rows
               </Badge>
               {currentResults.summary.totalIssues > 0 && (
-                <Badge variant="destructive" className="flex-shrink-0">
+                <Badge variant="destructive" className="flex-shrink-0 text-xs">
                   <AlertTriangle className="h-3 w-3 mr-1" />
-                  {currentResults.summary.totalIssues} issues
+                  {currentResults.summary.totalIssues}
                 </Badge>
               )}
               {searchResults && (
-                <Badge variant="secondary" className="flex-shrink-0">
+                <Badge variant="secondary" className="flex-shrink-0 text-xs">
                   <Filter className="h-3 w-3 mr-1" />
-                  Search Results
+                  Search
                 </Badge>
               )}
             </CardTitle>
             
             {showErrorsOnly && (
-              <Badge variant="secondary" className="flex-shrink-0">
+              <Badge variant="secondary" className="flex-shrink-0 text-xs">
                 <Filter className="h-3 w-3 mr-1" />
                 Errors only
               </Badge>
@@ -792,7 +726,7 @@ export default function DataGridWrapper({ fileId, searchResults }: DataGridWrapp
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="w-full">
+          <div className="w-full overflow-x-auto">
             <DataGrid 
               data={filteredData}
               headers={file.headers}

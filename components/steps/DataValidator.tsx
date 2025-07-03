@@ -569,11 +569,9 @@ export default function DataValidator() {
           Continue to Rules
           <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 ml-2" />
         </Button>
-<<<<<<< HEAD
       </div>
       </div>
-=======
->>>>>>> c0f8b1b475f0adec2ad136fdd4d8c1ccf959fd1d
+
       </div>
     </div>
   );

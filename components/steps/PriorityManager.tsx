@@ -27,7 +27,8 @@ import {
   Award,
   Shuffle,
   RotateCcw,
-  Sparkles
+  Sparkles,
+  ArrowRight
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -69,6 +70,18 @@ export default function PriorityManager() {
   const [pairwiseComparisons, setPairwiseComparisons] = useState<PairwiseComparison[]>([]);
   const [currentPairIndex, setCurrentPairIndex] = useState(0);
   const [selectedPreset, setSelectedPreset] = useState<string>('');
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Get all available fields from uploaded files with categorization
   const availableFields = useMemo(() => {
@@ -328,49 +341,50 @@ export default function PriorityManager() {
 
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <div className="max-w-7xl mx-auto px-6 py-6 space-y-6">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
         
-        {/* Header Section */}
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+        {/* Header Section - Mobile Optimized */}
+        <div className="flex flex-col gap-3 sm:gap-4">
           <div className="min-w-0 flex-1">
-            <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-slate-800 to-blue-600 bg-clip-text text-transparent mb-2">
-              Advanced Prioritization & Weights
+            <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-slate-800 to-blue-600 bg-clip-text text-transparent mb-2">
+              <span className="hidden sm:inline">Advanced Prioritization & Weights</span>
+              <span className="sm:hidden">Prioritization</span>
             </h1>
-            <p className="text-gray-600 font-medium text-sm lg:text-base">
-              Define relative importance of criteria for resource allocation optimization
+            <p className="text-gray-600 font-medium text-sm sm:text-base">
+              Define relative importance of criteria for optimization
             </p>
           </div>
           
-          <div className="flex items-center gap-3 flex-shrink-0">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 text-xs">
               <Target className="h-3 w-3 mr-1" />
               {availableFields.length} fields
             </Badge>
             <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 text-xs">
               <TrendingUp className="h-3 w-3 mr-1" />
-              4 methods
+              {isMobile ? '2' : '4'} methods
             </Badge>
           </div>
         </div>
 
-        {/* Field Selection */}
+        {/* Field Selection - Mobile Optimized */}
         <Card className="shadow-lg">
           <CardHeader className="bg-gradient-to-r from-slate-50 to-blue-50 pb-3">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Target className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-sm sm:text-lg">
+              <Target className="h-4 w-4 sm:h-5 sm:w-5" />
               Select Priority Criteria
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-4 space-y-4">
+          <CardContent className="p-3 sm:p-4 space-y-3 sm:space-y-4">
             <div className="space-y-2">
-              <Label>Available Fields</Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              <Label className="text-xs sm:text-sm">Available Fields</Label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
                 {availableFields.map((fieldInfo) => (
                   <motion.div
                     key={fieldInfo.name}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className={`p-3 border rounded-lg cursor-pointer transition-all ${
+                    className={`p-2 sm:p-3 border rounded-lg cursor-pointer transition-all ${
                       selectedFields.includes(fieldInfo.name)
                         ? 'border-blue-500 bg-blue-50 shadow-md'
                         : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
@@ -383,15 +397,15 @@ export default function PriorityManager() {
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex-1 min-w-0">
-                        <div className="font-medium text-sm truncate">{fieldInfo.name}</div>
-                        <div className="text-xs text-gray-500 mt-1 line-clamp-2">{fieldInfo.description}</div>
+                        <div className="font-medium text-xs sm:text-sm truncate">{fieldInfo.name}</div>
+                        <div className="text-xs text-gray-500 mt-1 line-clamp-2 hidden sm:block">{fieldInfo.description}</div>
                       </div>
-                      <div className="flex items-center gap-2 ml-2 flex-shrink-0">
+                      <div className="flex items-center gap-1 sm:gap-2 ml-2 flex-shrink-0">
                         <Badge variant="outline" className="text-xs">
                           {fieldInfo.category}
                         </Badge>
                         {selectedFields.includes(fieldInfo.name) && (
-                          <CheckCircle2 className="h-4 w-4 text-blue-600" />
+                          <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 text-blue-600" />
                         )}
                       </div>
                     </div>
@@ -406,49 +420,61 @@ export default function PriorityManager() {
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <Card className="shadow-lg">
               <CardHeader className="bg-gradient-to-r from-purple-50 to-blue-50 pb-3">
-                <TabsList className="grid w-full grid-cols-4 bg-white">
-                  <TabsTrigger value="sliders" className="text-sm">Sliders & Inputs</TabsTrigger>
-                  <TabsTrigger value="ranking" className="text-sm">Drag & Drop</TabsTrigger>
-                  <TabsTrigger value="pairwise" className="text-sm">Pairwise (AHP)</TabsTrigger>
-                  <TabsTrigger value="presets" className="text-sm">Preset Profiles</TabsTrigger>
+                <TabsList className={`grid w-full ${isMobile ? 'grid-cols-2' : 'grid-cols-4'} bg-white`}>
+                  <TabsTrigger value="sliders" className="text-xs sm:text-sm">
+                    <span className="hidden sm:inline">Sliders & Inputs</span>
+                    <span className="sm:hidden">Sliders</span>
+                  </TabsTrigger>
+                  {!isMobile && (
+                    <TabsTrigger value="ranking" className="text-xs sm:text-sm">Drag & Drop</TabsTrigger>
+                  )}
+                  {!isMobile && (
+                    <TabsTrigger value="pairwise" className="text-xs sm:text-sm">Pairwise (AHP)</TabsTrigger>
+                  )}
+                  <TabsTrigger value="presets" className="text-xs sm:text-sm">
+                    <span className="hidden sm:inline">Preset Profiles</span>
+                    <span className="sm:hidden">Presets</span>
+                  </TabsTrigger>
                 </TabsList>
               </CardHeader>
 
-              {/* Sliders & Numeric Inputs */}
-              <TabsContent value="sliders" className="space-y-6 p-6">
-                <div className="space-y-6">
+              {/* Sliders & Numeric Inputs - Mobile Optimized */}
+              <TabsContent value="sliders" className="space-y-4 sm:space-y-6 p-3 sm:p-6">
+                <div className="space-y-4 sm:space-y-6">
                   {priorities.map((priority, index) => (
                     <motion.div
                       key={priority.field}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className="space-y-4 p-4 border rounded-lg bg-gradient-to-r from-gray-50 to-blue-50"
+                      className="space-y-3 sm:space-y-4 p-3 sm:p-4 border rounded-lg bg-gradient-to-r from-gray-50 to-blue-50"
                     >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <Label className="font-semibold text-lg">{priority.field}</Label>
-                          <Badge variant="outline" className="text-xs">
-                            {priority.category}
-                          </Badge>
-                          <Badge variant="outline">
-                            {priority.type === 'maximize' ? (
-                              <ArrowUp className="h-3 w-3 mr-1" />
-                            ) : (
-                              <ArrowDown className="h-3 w-3 mr-1" />
-                            )}
-                            {priority.type}
-                          </Badge>
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                          <Label className="font-semibold text-sm sm:text-lg">{priority.field}</Label>
+                          <div className="flex flex-wrap items-center gap-1 sm:gap-2">
+                            <Badge variant="outline" className="text-xs">
+                              {priority.category}
+                            </Badge>
+                            <Badge variant="outline" className="text-xs">
+                              {priority.type === 'maximize' ? (
+                                <ArrowUp className="h-2 w-2 sm:h-3 sm:w-3 mr-1" />
+                              ) : (
+                                <ArrowDown className="h-2 w-2 sm:h-3 sm:w-3 mr-1" />
+                              )}
+                              {priority.type}
+                            </Badge>
+                          </div>
                         </div>
                         
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-2 sm:gap-4">
                           <Input
                             type="number"
                             min="0"
                             max="100"
                             value={priority.weight}
                             onChange={(e) => updatePriorityWeight(priority.field, parseInt(e.target.value) || 0)}
-                            className="w-20 text-center"
+                            className="w-16 sm:w-20 text-center text-xs sm:text-sm"
                           />
                           <Select
                             value={priority.type}
@@ -456,19 +482,19 @@ export default function PriorityManager() {
                               updatePriorityType(priority.field, value as 'maximize' | 'minimize')
                             }
                           >
-                            <SelectTrigger className="w-32">
+                            <SelectTrigger className="w-24 sm:w-32 text-xs sm:text-sm">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
                               <SelectItem value="maximize">
                                 <div className="flex items-center gap-2">
-                                  <ArrowUp className="h-4 w-4" />
+                                  <ArrowUp className="h-3 w-3 sm:h-4 sm:w-4" />
                                   Maximize
                                 </div>
                               </SelectItem>
                               <SelectItem value="minimize">
                                 <div className="flex items-center gap-2">
-                                  <ArrowDown className="h-4 w-4" />
+                                  <ArrowDown className="h-3 w-3 sm:h-4 sm:w-4" />
                                   Minimize
                                 </div>
                               </SelectItem>
@@ -478,7 +504,7 @@ export default function PriorityManager() {
                       </div>
 
                       <div className="space-y-2">
-                        <div className="flex justify-between text-sm">
+                        <div className="flex justify-between text-xs sm:text-sm">
                           <span>Weight: {priority.weight}%</span>
                           <span className="text-gray-500">
                             {priority.weight < 30 ? 'Low Priority' : 
@@ -495,181 +521,185 @@ export default function PriorityManager() {
                       </div>
 
                       {priority.description && (
-                        <p className="text-sm text-gray-600 italic">{priority.description}</p>
+                        <p className="text-xs sm:text-sm text-gray-600 italic hidden sm:block">{priority.description}</p>
                       )}
                     </motion.div>
                   ))}
                 </div>
               </TabsContent>
 
-              {/* Drag & Drop Ranking */}
-              <TabsContent value="ranking" className="space-y-6 p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h3 className="text-lg font-semibold">Drag & Drop Ranking</h3>
-                    <p className="text-sm text-gray-600">
-                      Drag criteria to reorder by importance. Top items get higher weights.
-                    </p>
-                  </div>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => {
-                      setRankedCriteria([...selectedFields]);
-                      toast.success('Ranking initialized');
-                    }}
-                  >
-                    <Shuffle className="h-4 w-4 mr-2" />
-                    Initialize
-                  </Button>
-                </div>
-                
-                <div className="space-y-3">
-                  {(rankedCriteria.length > 0 ? rankedCriteria : selectedFields).map((field, index) => {
-                    const priority = priorities.find(p => p.field === field);
-                    return (
-                      <motion.div
-                        key={field}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                        draggable
-                        onDragStart={() => handleDragStart(field)}
-                        onDragOver={handleDragOver}
-                        onDrop={(e) => handleDrop(e, field)}
-                        className="flex items-center gap-4 p-4 bg-white border rounded-lg cursor-move hover:shadow-md transition-all"
-                      >
-                        <div className="flex items-center gap-2">
-                          <GripVertical className="h-5 w-5 text-gray-400" />
-                          <Badge variant="outline" className="font-bold">
-                            #{index + 1}
-                          </Badge>
-                        </div>
-                        
-                        <div className="flex-1">
-                          <div className="font-medium">{field}</div>
-                          <div className="text-sm text-gray-500">
-                            Weight: {priority?.weight || Math.round(((selectedFields.length - index) / selectedFields.length) * 100)}%
-                          </div>
-                        </div>
-                        
-                        <Badge variant={priority?.type === 'maximize' ? 'default' : 'secondary'}>
-                          {priority?.type === 'maximize' ? (
-                            <ArrowUp className="h-3 w-3 mr-1" />
-                          ) : (
-                            <ArrowDown className="h-3 w-3 mr-1" />
-                          )}
-                          {priority?.type || 'maximize'}
-                        </Badge>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              </TabsContent>
-
-              {/* Pairwise Comparison */}
-              <TabsContent value="pairwise" className="space-y-6 p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h3 className="text-lg font-semibold">Pairwise Comparison Matrix (AHP)</h3>
-                    <p className="text-sm text-gray-600">
-                      Compare criteria two at a time to build scientifically accurate weights
-                    </p>
-                  </div>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={initializePairwiseComparisons}
-                  >
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    Start
-                  </Button>
-                </div>
-
-                {pairwiseComparisons.length > 0 ? (
-                  <div className="space-y-6">
-                    <div className="text-center">
-                      <p className="text-sm text-gray-600 mb-2">
-                        Comparison {currentPairIndex + 1} of {pairwiseComparisons.length}
+              {/* Drag & Drop Ranking - Desktop Only */}
+              {!isMobile && (
+                <TabsContent value="ranking" className="space-y-6 p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h3 className="text-lg font-semibold">Drag & Drop Ranking</h3>
+                      <p className="text-sm text-gray-600">
+                        Drag criteria to reorder by importance. Top items get higher weights.
                       </p>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div 
-                          className="bg-blue-600 h-2 rounded-full transition-all"
-                          style={{ width: `${((currentPairIndex + 1) / pairwiseComparisons.length) * 100}%` }}
-                        />
-                      </div>
                     </div>
-
-                    {currentPairIndex < pairwiseComparisons.length && (
-                      <div className="text-center space-y-6">
-                        <div className="space-y-2">
-                          <h3 className="text-lg font-semibold">Which criterion is more important?</h3>
-                          <div className="flex items-center justify-center gap-4">
-                            <Badge variant="outline" className="text-lg p-3">
-                              {pairwiseComparisons[currentPairIndex]?.criteria1}
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => {
+                        setRankedCriteria([...selectedFields]);
+                        toast.success('Ranking initialized');
+                      }}
+                    >
+                      <Shuffle className="h-4 w-4 mr-2" />
+                      Initialize
+                    </Button>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    {(rankedCriteria.length > 0 ? rankedCriteria : selectedFields).map((field, index) => {
+                      const priority = priorities.find(p => p.field === field);
+                      return (
+                        <motion.div
+                          key={field}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                          draggable
+                          onDragStart={() => handleDragStart(field)}
+                          onDragOver={handleDragOver}
+                          onDrop={(e) => handleDrop(e, field)}
+                          className="flex items-center gap-4 p-4 bg-white border rounded-lg cursor-move hover:shadow-md transition-all"
+                        >
+                          <div className="flex items-center gap-2">
+                            <GripVertical className="h-5 w-5 text-gray-400" />
+                            <Badge variant="outline" className="font-bold">
+                              #{index + 1}
                             </Badge>
-                            <span className="text-gray-500">vs</span>
-                            <Badge variant="outline" className="text-lg p-3">
-                              {pairwiseComparisons[currentPairIndex]?.criteria2}
-                            </Badge>
                           </div>
-                        </div>
-
-                        <div className="space-y-4">
-                          <div className="grid grid-cols-9 gap-2">
-                            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((value) => (
-                              <Button
-                                key={value}
-                                variant={pairwiseComparisons[currentPairIndex]?.preference === value ? "default" : "outline"}
-                                onClick={() => updatePairwiseComparison(value)}
-                                className="h-12"
-                              >
-                                {value}
-                              </Button>
-                            ))}
+                          
+                          <div className="flex-1">
+                            <div className="font-medium">{field}</div>
+                            <div className="text-sm text-gray-500">
+                              Weight: {priority?.weight || Math.round(((selectedFields.length - index) / selectedFields.length) * 100)}%
+                            </div>
                           </div>
-                          <div className="flex justify-between text-xs text-gray-500">
-                            <span>Much more important ←</span>
-                            <span>Equal</span>
-                            <span>→ Much more important</span>
-                          </div>
-                        </div>
+                          
+                          <Badge variant={priority?.type === 'maximize' ? 'default' : 'secondary'}>
+                            {priority?.type === 'maximize' ? (
+                              <ArrowUp className="h-3 w-3 mr-1" />
+                            ) : (
+                              <ArrowDown className="h-3 w-3 mr-1" />
+                            )}
+                            {priority?.type || 'maximize'}
+                          </Badge>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                </TabsContent>
+              )}
 
-                        <div className="flex gap-2">
-                          <Button
-                            variant="outline"
-                            onClick={resetPairwiseComparisons}
-                          >
-                            <RotateCcw className="h-4 w-4 mr-2" />
-                            Reset
-                          </Button>
-                        </div>
-                      </div>
-                    )}
+              {/* Pairwise Comparison - Desktop Only */}
+              {!isMobile && (
+                <TabsContent value="pairwise" className="space-y-6 p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h3 className="text-lg font-semibold">Pairwise Comparison Matrix (AHP)</h3>
+                      <p className="text-sm text-gray-600">
+                        Compare criteria two at a time to build scientifically accurate weights
+                      </p>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={initializePairwiseComparisons}
+                    >
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                      Start
+                    </Button>
+                  </div>
 
-                    {currentPairIndex >= pairwiseComparisons.length && (
-                      <div className="text-center space-y-4">
-                        <CheckCircle2 className="h-16 w-16 text-green-600 mx-auto" />
-                        <h3 className="text-lg font-semibold text-green-800">
-                          Pairwise Comparison Complete!
-                        </h3>
-                        <p className="text-gray-600">
-                          Weights have been calculated using the Analytic Hierarchy Process
+                  {pairwiseComparisons.length > 0 ? (
+                    <div className="space-y-6">
+                      <div className="text-center">
+                        <p className="text-sm text-gray-600 mb-2">
+                          Comparison {currentPairIndex + 1} of {pairwiseComparisons.length}
                         </p>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div 
+                            className="bg-blue-600 h-2 rounded-full transition-all"
+                            style={{ width: `${((currentPairIndex + 1) / pairwiseComparisons.length) * 100}%` }}
+                          />
+                        </div>
                       </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="text-center py-8">
-                    <Scale className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                    <p className="text-gray-500">Click "Start" to begin pairwise comparisons</p>
-                  </div>
-                )}
-              </TabsContent>
 
-              {/* Preset Profiles */}
-              <TabsContent value="presets" className="space-y-6 p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {currentPairIndex < pairwiseComparisons.length && (
+                        <div className="text-center space-y-6">
+                          <div className="space-y-2">
+                            <h3 className="text-lg font-semibold">Which criterion is more important?</h3>
+                            <div className="flex items-center justify-center gap-4">
+                              <Badge variant="outline" className="text-lg p-3">
+                                {pairwiseComparisons[currentPairIndex]?.criteria1}
+                              </Badge>
+                              <span className="text-gray-500">vs</span>
+                              <Badge variant="outline" className="text-lg p-3">
+                                {pairwiseComparisons[currentPairIndex]?.criteria2}
+                              </Badge>
+                            </div>
+                          </div>
+
+                          <div className="space-y-4">
+                            <div className="grid grid-cols-9 gap-2">
+                              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((value) => (
+                                <Button
+                                  key={value}
+                                  variant={pairwiseComparisons[currentPairIndex]?.preference === value ? "default" : "outline"}
+                                  onClick={() => updatePairwiseComparison(value)}
+                                  className="h-12"
+                                >
+                                  {value}
+                                </Button>
+                              ))}
+                            </div>
+                            <div className="flex justify-between text-xs text-gray-500">
+                              <span>Much more important ←</span>
+                              <span>Equal</span>
+                              <span>→ Much more important</span>
+                            </div>
+                          </div>
+
+                          <div className="flex gap-2">
+                            <Button
+                              variant="outline"
+                              onClick={resetPairwiseComparisons}
+                            >
+                              <RotateCcw className="h-4 w-4 mr-2" />
+                              Reset
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+
+                      {currentPairIndex >= pairwiseComparisons.length && (
+                        <div className="text-center space-y-4">
+                          <CheckCircle2 className="h-16 w-16 text-green-600 mx-auto" />
+                          <h3 className="text-lg font-semibold text-green-800">
+                            Pairwise Comparison Complete!
+                          </h3>
+                          <p className="text-gray-600">
+                            Weights have been calculated using the Analytic Hierarchy Process
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <Scale className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                      <p className="text-gray-500">Click "Start" to begin pairwise comparisons</p>
+                    </div>
+                  )}
+                </TabsContent>
+              )}
+
+              {/* Preset Profiles - Mobile Optimized */}
+              <TabsContent value="presets" className="space-y-4 sm:space-y-6 p-3 sm:p-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   {presetProfiles.map((preset) => {
                     const IconComponent = preset.icon;
                     return (
@@ -686,27 +716,27 @@ export default function PriorityManager() {
                           }`}
                           onClick={() => applyPreset(preset.id)}
                         >
-                          <CardContent className="p-4">
-                            <div className="space-y-3">
-                              <div className="flex items-start gap-3">
-                                <div className={`p-2 rounded-lg ${preset.color}`}>
-                                  <IconComponent className="h-5 w-5" />
+                          <CardContent className="p-3 sm:p-4">
+                            <div className="space-y-2 sm:space-y-3">
+                              <div className="flex items-start gap-2 sm:gap-3">
+                                <div className={`p-1.5 sm:p-2 rounded-lg ${preset.color} flex-shrink-0`}>
+                                  <IconComponent className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5" />
                                 </div>
-                                <div className="flex-1">
-                                  <h3 className="font-semibold">{preset.name}</h3>
-                                  <p className="text-sm text-gray-600 mt-1">{preset.description}</p>
+                                <div className="flex-1 min-w-0">
+                                  <h3 className="font-semibold text-xs sm:text-sm lg:text-base truncate">{preset.name}</h3>
+                                  <p className="text-xs text-gray-600 mt-1 line-clamp-2">{preset.description}</p>
                                 </div>
                               </div>
                               
                               <div className="space-y-2">
                                 <Label className="text-xs font-medium text-gray-500">KEY WEIGHTS:</Label>
-                                <div className="grid grid-cols-2 gap-2">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 sm:gap-2">
                                   {Object.entries(preset.weights)
                                     .filter(([, config]) => config !== undefined)
-                                    .slice(0, 4)
+                                    .slice(0, isMobile ? 2 : 4)
                                     .map(([field, config]) => (
                                       <div key={field} className="flex items-center justify-between text-xs">
-                                        <span className="truncate">{field}</span>
+                                        <span className="truncate max-w-[80px] sm:max-w-none">{field}</span>
                                         <Badge variant="outline" className="text-xs">
                                           {config!.weight}%
                                         </Badge>
@@ -726,34 +756,35 @@ export default function PriorityManager() {
           </Tabs>
         )}
 
-        {/* Priority Summary */}
+        {/* Priority Summary - Mobile Optimized */}
         {priorities.length > 0 && (
           <Card className="shadow-lg">
             <CardHeader className="bg-gradient-to-r from-green-50 to-blue-50 pb-3">
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <BarChart3 className="h-5 w-5" />
-                Priority Summary & Configuration
+              <CardTitle className="flex items-center gap-2 text-sm sm:text-lg">
+                <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="hidden sm:inline">Priority Summary & Configuration</span>
+                <span className="sm:hidden">Priority Summary</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <CardContent className="p-3 sm:p-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 <div>
-                  <h4 className="font-semibold mb-3">Weight Distribution</h4>
-                  <div className="space-y-3">
+                  <h4 className="font-semibold mb-3 text-sm sm:text-base">Weight Distribution</h4>
+                  <div className="space-y-2 sm:space-y-3">
                     {priorities.sort((a, b) => b.weight - a.weight).map((priority) => (
                       <div key={priority.field} className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium">{priority.field}</span>
-                            <Badge variant="outline" className="text-xs">
+                          <div className="flex items-center gap-1 sm:gap-2 min-w-0">
+                            <span className="text-xs sm:text-sm font-medium truncate">{priority.field}</span>
+                            <Badge variant="outline" className="text-xs flex-shrink-0">
                               {priority.type === 'maximize' ? '↑' : '↓'}
                             </Badge>
                           </div>
-                          <span className="text-sm font-bold">{priority.weight}%</span>
+                          <span className="text-xs sm:text-sm font-bold flex-shrink-0">{priority.weight}%</span>
                         </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2">
                           <div
-                            className={`h-2 rounded-full transition-all ${
+                            className={`h-1.5 sm:h-2 rounded-full transition-all ${
                               priority.type === 'maximize' ? 'bg-green-500' : 'bg-blue-500'
                             }`}
                             style={{ width: `${priority.weight}%` }}
@@ -764,7 +795,7 @@ export default function PriorityManager() {
                   </div>
                 </div>
 
-                <div>
+                <div className="hidden lg:block">
                   <h4 className="font-semibold mb-3">JSON Configuration</h4>
                   <pre className="text-xs bg-gray-50 p-3 rounded-lg overflow-x-auto border max-h-80">
                     {JSON.stringify({
@@ -789,17 +820,18 @@ export default function PriorityManager() {
             </CardContent>
           </Card>
         )}
-
-        <div className="flex justify-end">
-          <Button 
-            onClick={() => setCurrentStep(4)}
-            disabled={priorities.length === 0}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-8 py-3 text-lg shadow-lg hover:shadow-xl"
-          >
-            Continue to Export
-            <Sparkles className="h-5 w-5 ml-2" />
-          </Button>
-        </div>
+      </div>
+      
+      {/* Continue Button - Fixed Position on Mobile */}
+      <div className="fixed bottom-4 left-4 right-4 sm:relative sm:bottom-auto sm:left-auto sm:right-auto sm:flex sm:justify-end sm:mt-6 z-10">
+        <Button 
+          onClick={() => setCurrentStep(4)}
+          disabled={priorities.length === 0}
+          className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-6 sm:px-8 py-3 text-sm sm:text-lg shadow-xl hover:shadow-2xl hover-lift"
+        >
+          Continue to Export
+          <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 ml-2" />
+        </Button>
       </div>
     </div>
   );

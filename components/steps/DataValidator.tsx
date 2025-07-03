@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { useDataStore } from '@/store/dataStore';
 import DataGridWrapper from '@/components/data/DataGridWrapper';
+
 import { 
   Sparkles,
   Database,
@@ -20,7 +21,8 @@ import {
   MessageSquare,
   Filter,
   X,
-  Lightbulb
+  Lightbulb,
+  ArrowRight
 } from 'lucide-react';
 
 export default function DataValidator() {
@@ -336,13 +338,13 @@ export default function DataValidator() {
 
   if (!activeFile) {
     return (
-      <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 bg-pattern-dots flex items-center justify-center p-6">
+      <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 bg-pattern-dots flex items-center justify-center p-4 sm:p-6">
         <div className="text-center max-w-md">
-          <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-glow-blue animate-pulse-slow">
-            <FileText className="h-12 w-12 text-white" />
+          <div className="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-glow-blue animate-pulse-slow">
+            <FileText className="h-8 w-8 sm:h-12 sm:w-12 text-white" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">No Files Uploaded</h2>
-          <p className="text-gray-600 mb-6">Upload your data files to begin validation</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">No Files Uploaded</h2>
+          <p className="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base">Upload your data files to begin validation</p>
           <Button onClick={() => setCurrentStep(0)} className="btn-gradient">
             Upload Files
           </Button>
@@ -352,23 +354,25 @@ export default function DataValidator() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 bg-pattern-dots overflow-x-hidden">
-      {/* Main Container with Fixed Width */}
-      <div className="w-full max-w-[calc(100vw-20rem)] mx-auto px-6 py-6 space-y-6">
+    <div className="flex min-h-[calc(100vh-4rem)] overflow-hidden">
+      <div className="flex-1 max-w-[calc(90vw-16rem)] bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 bg-pattern-dots overflow-x-hidden">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
+      {/* Main Container with Mobile Optimization */}
+      <div className="w-full mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
         
         {/* Header Section */}
         <div className="w-full">
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+          <div className="flex flex-col gap-3 sm:gap-4">
             <div className="min-w-0 flex-1">
-              <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-slate-800 to-blue-600 bg-clip-text text-transparent mb-2">
+              <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-slate-800 to-blue-600 bg-clip-text text-transparent mb-2">
                 Clean & Validate Data
               </h1>
-              <p className="text-gray-600 font-medium text-sm lg:text-base">
-                Advanced data validation with AI-powered auto-fix capabilities
+              <p className="text-gray-600 font-medium text-sm sm:text-base">
+                Advanced data validation with AI-powered capabilities
               </p>
             </div>
             
-            <div className="flex items-center gap-3 flex-shrink-0">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               <Badge variant="outline" className="bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-700 border-blue-200 text-xs shadow-sm">
                 <Database className="h-3 w-3 mr-1" />
                 {files.length} file{files.length !== 1 ? 's' : ''}
@@ -381,138 +385,140 @@ export default function DataValidator() {
           </div>
         </div>
 
-        {/* Enhanced Natural Language Search */}
-        <Card className="shadow-xl border-2 border-blue-200">
-          <CardHeader className="bg-gradient-to-r from-slate-800 to-blue-600 text-white pb-3">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <MessageSquare className="h-5 w-5" />
-              Advanced Natural Language Data Search
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-4 space-y-4">
-            <div className="flex gap-3">
-              <div className="flex-1 min-w-0">
-                <Input
-                  placeholder="e.g., 'Show tasks with duration more than 2 and priority level 4 or higher in phase 2'"
-                  value={naturalLanguageQuery}
-                  onChange={(e) => setNaturalLanguageQuery(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleNaturalLanguageSearch()}
-                  className="text-sm w-full border-2 border-blue-200 focus:border-blue-500"
-                />
-              </div>
-              <Button 
-                onClick={handleNaturalLanguageSearch} 
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 flex-shrink-0"
-                size="sm"
-                disabled={isSearching}
-              >
-                {isSearching ? (
-                  <div className="animate-spin h-4 w-4 mr-2 border-2 border-white border-t-transparent rounded-full" />
-                ) : (
-                  <Search className="h-4 w-4 mr-2" />
-                )}
-                Search
-              </Button>
-              {searchResults.length > 0 && (
+        {/* Enhanced Natural Language Search - Desktop Only */}
+        <div className="hidden lg:block">
+          <Card className="shadow-xl border-2 border-blue-200">
+            <CardHeader className="bg-gradient-to-r from-slate-800 to-blue-600 text-white pb-3">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <MessageSquare className="h-5 w-5" />
+                Advanced Natural Language Data Search
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-4 space-y-4">
+              <div className="flex gap-3">
+                <div className="flex-1 min-w-0">
+                  <Input
+                    placeholder="e.g., 'Show tasks with duration more than 2 and priority level 4 or higher in phase 2'"
+                    value={naturalLanguageQuery}
+                    onChange={(e) => setNaturalLanguageQuery(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleNaturalLanguageSearch()}
+                    className="text-sm w-full border-2 border-blue-200 focus:border-blue-500"
+                  />
+                </div>
                 <Button 
-                  size="sm" 
-                  variant="outline" 
-                  onClick={clearSearch}
-                  className="flex-shrink-0 hover:bg-red-50 hover:text-red-700"
+                  onClick={handleNaturalLanguageSearch} 
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 flex-shrink-0"
+                  size="sm"
+                  disabled={isSearching}
                 >
-                  <X className="h-4 w-4 mr-1" />
-                  Clear
+                  {isSearching ? (
+                    <div className="animate-spin h-4 w-4 mr-2 border-2 border-white border-t-transparent rounded-full" />
+                  ) : (
+                    <Search className="h-4 w-4 mr-2" />
+                  )}
+                  Search
                 </Button>
-              )}
-            </div>
-
-            {/* Search Suggestions */}
-            <div className="space-y-3">
-              {getSuggestedQueries().length > 0 && (
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Lightbulb className="h-4 w-4 text-amber-600" />
-                    <span className="text-sm font-medium text-gray-700">Suggested Queries:</span>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {getSuggestedQueries().map((suggestion, index) => (
-                      <Button
-                        key={index}
-                        variant="outline"
-                        size="sm"
-                        onClick={() => useSearchHistory(suggestion)}
-                        className="text-xs h-7 px-2 bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 border-purple-200 text-purple-700 hover-lift"
-                      >
-                        {suggestion}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {searchHistory.length > 0 && (
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Search className="h-4 w-4 text-blue-600" />
-                    <span className="text-sm font-medium text-gray-700">Recent Searches:</span>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {searchHistory.map((query, index) => (
-                      <Button
-                        key={index}
-                        variant="outline"
-                        size="sm"
-                        onClick={() => useSearchHistory(query)}
-                        className="text-xs h-7 px-2 bg-gradient-to-r from-blue-50 to-cyan-50 hover:from-blue-100 hover:to-cyan-100 border-blue-200 text-blue-700 hover-lift"
-                      >
-                        {query.length > 30 ? `${query.substring(0, 30)}...` : query}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {searchResults.length > 0 && (
-              <div className="p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm text-blue-800 font-medium">
-                    <Filter className="h-4 w-4 inline mr-1" />
-                    Found {searchResults.length} matching records
-                  </p>
-                  <Badge variant="secondary" className="text-xs bg-gradient-to-r from-blue-100 to-purple-100">
-                    {((searchResults.length / activeFile.data.length) * 100).toFixed(1)}% of total
-                  </Badge>
-                </div>
+                {searchResults.length > 0 && (
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    onClick={clearSearch}
+                    className="flex-shrink-0 hover:bg-red-50 hover:text-red-700"
+                  >
+                    <X className="h-4 w-4 mr-1" />
+                    Clear
+                  </Button>
+                )}
               </div>
-            )}
-          </CardContent>
-        </Card>
 
-        {/* File Selection Tabs - Improved Design */}
+              {/* Search Suggestions */}
+              <div className="space-y-3">
+                {getSuggestedQueries().length > 0 && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Lightbulb className="h-4 w-4 text-amber-600" />
+                      <span className="text-sm font-medium text-gray-700">Suggested Queries:</span>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {getSuggestedQueries().map((suggestion, index) => (
+                        <Button
+                          key={index}
+                          variant="outline"
+                          size="sm"
+                          onClick={() => useSearchHistory(suggestion)}
+                          className="text-xs h-7 px-2 bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 border-purple-200 text-purple-700 hover-lift"
+                        >
+                          {suggestion}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {searchHistory.length > 0 && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Search className="h-4 w-4 text-blue-600" />
+                      <span className="text-sm font-medium text-gray-700">Recent Searches:</span>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {searchHistory.map((query, index) => (
+                        <Button
+                          key={index}
+                          variant="outline"
+                          size="sm"
+                          onClick={() => useSearchHistory(query)}
+                          className="text-xs h-7 px-2 bg-gradient-to-r from-blue-50 to-cyan-50 hover:from-blue-100 hover:to-cyan-100 border-blue-200 text-blue-700 hover-lift"
+                        >
+                          {query.length > 30 ? `${query.substring(0, 30)}...` : query}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {searchResults.length > 0 && (
+                <div className="p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-blue-800 font-medium">
+                      <Filter className="h-4 w-4 inline mr-1" />
+                      Found {searchResults.length} matching records
+                    </p>
+                    <Badge variant="secondary" className="text-xs bg-gradient-to-r from-blue-100 to-purple-100">
+                      {((searchResults.length / activeFile.data.length) * 100).toFixed(1)}% of total
+                    </Badge>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* File Selection Tabs - Mobile Optimized */}
         {files.length > 1 && (
           <Card className="shadow-xl border-2 border-blue-200">
             <CardHeader className="bg-gradient-to-r from-slate-800 to-blue-600 text-white pb-3">
-              <CardTitle className="text-lg">Select File to Validate</CardTitle>
+              <CardTitle className="text-sm sm:text-lg">Select File to Validate</CardTitle>
             </CardHeader>
-            <CardContent className="p-4">
+            <CardContent className="p-3 sm:p-4">
               <div className="w-full overflow-x-auto">
                 <Tabs value={activeFileId || ''} onValueChange={setActiveFile} className="w-full">
-                  <TabsList className="grid w-full bg-gradient-to-r from-blue-50 to-cyan-50 border rounded-lg p-1" style={{ gridTemplateColumns: `repeat(${Math.min(files.length, 4)}, 1fr)` }}>
+                  <TabsList className="grid w-full bg-gradient-to-r from-blue-50 to-cyan-50 border rounded-lg p-1" style={{ gridTemplateColumns: `repeat(${Math.min(files.length, 2)}, 1fr)` }}>
                     {files.map((file) => (
                       <TabsTrigger 
                         key={file.id} 
                         value={file.id}
-                        className="font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-cyan-500 data-[state=active]:text-white px-3 py-2 text-center rounded-md transition-all min-w-0 hover-lift"
+                        className="font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-cyan-500 data-[state=active]:text-white px-2 sm:px-3 py-2 text-center rounded-md transition-all min-w-0 hover-lift text-xs sm:text-sm"
                       >
                         <div className="flex flex-col items-center gap-1 min-w-0 w-full">
-                          <div className="flex items-center gap-2 min-w-0 w-full justify-center">
-                            <FileText className="h-4 w-4 flex-shrink-0" />
+                          <div className="flex items-center gap-1 sm:gap-2 min-w-0 w-full justify-center">
+                            <FileText className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                             <span 
-                              className="truncate text-sm font-medium max-w-[120px]" 
+                              className="truncate font-medium max-w-[80px] sm:max-w-[120px]" 
                               title={file.name}
                             >
-                              {file.name.length > 15 ? `${file.name.substring(0, 15)}...` : file.name}
+                              {file.name.length > 10 ? `${file.name.substring(0, 10)}...` : file.name}
                             </span>
                           </div>
                           <div className="flex items-center gap-1 flex-wrap justify-center">
@@ -533,9 +539,9 @@ export default function DataValidator() {
                 </Tabs>
               </div>
               
-              {/* Show additional files if more than 4 */}
-              {files.length > 4 && (
-                <div className="mt-3 text-sm text-gray-600 text-center">
+              {/* Show additional files if more than 2 on mobile */}
+              {files.length > 2 && (
+                <div className="mt-3 text-xs sm:text-sm text-gray-600 text-center sm:hidden">
                   Scroll horizontally to see all {files.length} files
                 </div>
               )}
@@ -543,24 +549,26 @@ export default function DataValidator() {
           </Card>
         )}
 
-        {/* Main Data Grid Wrapper */}
+        {/* Main Data Grid Wrapper - Mobile Optimized */}
         <div className="w-full">
           <DataGridWrapper 
             fileId={activeFile.id} 
             searchResults={searchResults.length > 0 ? searchResults : undefined}
           />
         </div>
-
-        {/* Continue Button */}
-        <div className="flex justify-end w-full pt-4">
-          <Button 
-            onClick={() => setCurrentStep(2)}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-8 py-3 text-lg shadow-xl hover:shadow-2xl hover-lift"
-          >
-            Continue to Rules
-            <Sparkles className="h-5 w-5 ml-2" />
-          </Button>
-        </div>
+      </div>
+      
+      {/* Continue Button - Fixed Position on Mobile */}
+      <div className="fixed bottom-4 left-4 right-4 sm:relative sm:bottom-auto sm:left-auto sm:right-auto sm:flex sm:justify-end sm:mt-6 sm:px-6 z-10">
+        <Button 
+          onClick={() => setCurrentStep(2)}
+          className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-6 sm:px-8 py-3 text-sm sm:text-lg shadow-xl hover:shadow-2xl hover-lift"
+        >
+          Continue to Rules
+          <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 ml-2" />
+        </Button>
+      </div>
+      </div>
       </div>
     </div>
   );

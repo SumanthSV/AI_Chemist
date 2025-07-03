@@ -36,7 +36,8 @@ import {
   FileText,
   Users,
   Briefcase,
-  TrendingUp
+  TrendingUp,
+  ArrowRight
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -297,35 +298,39 @@ export default function RuleBuilder() {
 
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <div className="max-w-7xl mx-auto px-6 py-6 space-y-6">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
         
-        {/* Header Section */}
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+        {/* Header Section - Mobile Optimized */}
+        <div className="flex flex-col gap-3 sm:gap-4">
           <div className="min-w-0 flex-1">
-            <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-slate-800 to-blue-600 bg-clip-text text-transparent mb-2">
-              Advanced Business Rules Engine
+            <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-slate-800 to-blue-600 bg-clip-text text-transparent mb-2">
+              <span className="hidden sm:inline">Advanced Business Rules Engine</span>
+              <span className="sm:hidden">Business Rules</span>
             </h1>
-            <p className="text-gray-600 font-medium text-sm lg:text-base">
-              Create sophisticated validation, transformation, and constraint rules with AI assistance
+            <p className="text-gray-600 font-medium text-sm sm:text-base">
+              Create sophisticated validation and constraint rules
             </p>
           </div>
           
-          <div className="flex items-center gap-3 flex-shrink-0">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 text-xs">
               <Settings className="h-3 w-3 mr-1" />
               {rules.length} rules
             </Badge>
-            <Button onClick={generateAISuggestions} variant="outline" size="sm">
-              <Sparkles className="h-4 w-4 mr-2" />
-              AI Suggestions
+            <Button onClick={generateAISuggestions} variant="outline" size="sm" className="text-xs sm:text-sm">
+              <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">AI Suggestions</span>
+              <span className="sm:hidden">AI</span>
             </Button>
-            <Button onClick={exportRules} variant="outline" size="sm">
-              <Download className="h-4 w-4 mr-2" />
-              Export Rules
+            <Button onClick={exportRules} variant="outline" size="sm" className="text-xs sm:text-sm">
+              <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Export Rules</span>
+              <span className="sm:hidden">Export</span>
             </Button>
-            <Button onClick={() => setShowRuleForm(true)} size="sm">
-              <Plus className="h-4 w-4 mr-2" />
-              Add Rule
+            <Button onClick={() => setShowRuleForm(true)} size="sm" className="text-xs sm:text-sm">
+              <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Add Rule</span>
+              <span className="sm:hidden">Add</span>
             </Button>
           </div>
         </div>
@@ -333,23 +338,35 @@ export default function RuleBuilder() {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <Card className="shadow-lg">
             <CardHeader className="bg-gradient-to-r from-purple-50 to-blue-50 pb-3">
-              <TabsList className="grid w-full grid-cols-4 bg-white">
-                <TabsTrigger value="builder">Rule Builder</TabsTrigger>
-                <TabsTrigger value="natural">Natural Language</TabsTrigger>
-                <TabsTrigger value="active">Active Rules ({rules.length})</TabsTrigger>
-                <TabsTrigger value="preview">JSON Preview</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 bg-white">
+                <TabsTrigger value="builder" className="text-xs sm:text-sm">
+                  <span className="hidden sm:inline">Rule Builder</span>
+                  <span className="sm:hidden">Builder</span>
+                </TabsTrigger>
+                <TabsTrigger value="natural" className="text-xs sm:text-sm">
+                  <span className="hidden sm:inline">Natural Language</span>
+                  <span className="sm:hidden">Natural</span>
+                </TabsTrigger>
+                <TabsTrigger value="active" className="text-xs sm:text-sm">
+                  <span className="hidden sm:inline">Active Rules ({rules.length})</span>
+                  <span className="sm:hidden">Rules ({rules.length})</span>
+                </TabsTrigger>
+                <TabsTrigger value="preview" className="text-xs sm:text-sm">
+                  <span className="hidden sm:inline">JSON Preview</span>
+                  <span className="sm:hidden">JSON</span>
+                </TabsTrigger>
               </TabsList>
             </CardHeader>
 
             {/* Rule Builder Tab */}
-            <TabsContent value="builder" className="space-y-6 p-6">
-              {/* Rule Type Selection */}
+            <TabsContent value="builder" className="space-y-4 sm:space-y-6 p-3 sm:p-6">
+              {/* Rule Type Selection - Mobile Optimized */}
               <Card>
                 <CardHeader className="bg-gradient-to-r from-slate-50 to-blue-50 pb-3">
-                  <CardTitle className="text-lg">Select Rule Type</CardTitle>
+                  <CardTitle className="text-sm sm:text-lg">Select Rule Type</CardTitle>
                 </CardHeader>
-                <CardContent className="p-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <CardContent className="p-3 sm:p-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                     {RULE_TYPES.map((ruleType) => {
                       const IconComponent = ruleType.icon;
                       return (
@@ -370,19 +387,19 @@ export default function RuleBuilder() {
                               setShowRuleForm(true);
                             }}
                           >
-                            <CardContent className="p-4">
-                              <div className="flex items-start gap-3">
-                                <div className={`p-2 rounded-lg ${ruleType.color}`}>
-                                  <IconComponent className="h-5 w-5" />
+                            <CardContent className="p-3 sm:p-4">
+                              <div className="flex items-start gap-2 sm:gap-3">
+                                <div className={`p-1.5 sm:p-2 rounded-lg ${ruleType.color} flex-shrink-0`}>
+                                  <IconComponent className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5" />
                                 </div>
-                                <div className="flex-1">
-                                  <h3 className="font-semibold text-sm">{ruleType.label}</h3>
-                                  <p className="text-xs text-gray-600 mt-1">{ruleType.description}</p>
-                                  <div className="mt-2">
+                                <div className="flex-1 min-w-0">
+                                  <h3 className="font-semibold text-xs sm:text-sm truncate">{ruleType.label}</h3>
+                                  <p className="text-xs text-gray-600 mt-1 line-clamp-2">{ruleType.description}</p>
+                                  <div className="mt-2 hidden sm:block">
                                     <p className="text-xs text-gray-500 font-medium">Examples:</p>
                                     <ul className="text-xs text-gray-500 mt-1 space-y-1">
-                                      {ruleType.examples.slice(0, 2).map((example, idx) => (
-                                        <li key={idx}>• {example}</li>
+                                      {ruleType.examples.slice(0, 1).map((example, idx) => (
+                                        <li key={idx} className="truncate">• {example}</li>
                                       ))}
                                     </ul>
                                   </div>
@@ -397,7 +414,7 @@ export default function RuleBuilder() {
                 </CardContent>
               </Card>
 
-              {/* Rule Form */}
+              {/* Rule Form - Mobile Optimized */}
               <AnimatePresence>
                 {showRuleForm && (
                   <motion.div
@@ -407,37 +424,39 @@ export default function RuleBuilder() {
                   >
                     <Card>
                       <CardHeader className="bg-gradient-to-r from-green-50 to-blue-50 pb-3">
-                        <CardTitle className="flex items-center gap-2 text-lg">
+                        <CardTitle className="flex items-center gap-2 text-sm sm:text-lg">
                           {selectedRuleType && (
                             <>
                               {(() => {
                                 const IconComponent = getRuleTypeInfo(selectedRuleType).icon;
-                                return <IconComponent className="h-5 w-5" />;
+                                return <IconComponent className="h-4 w-4 sm:h-5 sm:w-5" />;
                               })()}
-                              Create {getRuleTypeInfo(selectedRuleType).label} Rule
+                              <span className="hidden sm:inline">Create {getRuleTypeInfo(selectedRuleType).label} Rule</span>
+                              <span className="sm:hidden">{getRuleTypeInfo(selectedRuleType).label}</span>
                             </>
                           )}
                         </CardTitle>
                       </CardHeader>
-                      <CardContent className="space-y-6 p-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <CardContent className="space-y-4 sm:space-y-6 p-3 sm:p-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                           <div className="space-y-2">
-                            <Label htmlFor="rule-name">Rule Name *</Label>
+                            <Label htmlFor="rule-name" className="text-xs sm:text-sm">Rule Name *</Label>
                             <Input
                               id="rule-name"
                               placeholder="e.g., High Priority Co-Run Tasks"
                               value={newRule.name || ''}
                               onChange={(e) => setNewRule({ ...newRule, name: e.target.value })}
+                              className="text-xs sm:text-sm"
                             />
                           </div>
                           
                           <div className="space-y-2">
-                            <Label htmlFor="rule-priority">Priority Level</Label>
+                            <Label htmlFor="rule-priority" className="text-xs sm:text-sm">Priority Level</Label>
                             <Select 
                               value={String(newRule.priority || 1)} 
                               onValueChange={(value) => setNewRule({ ...newRule, priority: parseInt(value) })}
                             >
-                              <SelectTrigger>
+                              <SelectTrigger className="text-xs sm:text-sm">
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
@@ -452,57 +471,57 @@ export default function RuleBuilder() {
                         </div>
 
                         <div className="space-y-2">
-                          <Label htmlFor="rule-description">Description</Label>
+                          <Label htmlFor="rule-description" className="text-xs sm:text-sm">Description</Label>
                           <Textarea
                             id="rule-description"
                             placeholder="Describe what this rule does and when it should be applied..."
                             value={newRule.description || ''}
                             onChange={(e) => setNewRule({ ...newRule, description: e.target.value })}
-                            className="min-h-[80px]"
+                            className="min-h-[60px] sm:min-h-[80px] text-xs sm:text-sm"
                           />
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 gap-3 sm:gap-4">
                           <div className="space-y-2">
-                            <Label htmlFor="rule-condition">Condition Logic *</Label>
+                            <Label htmlFor="rule-condition" className="text-xs sm:text-sm">Condition Logic *</Label>
                             <Textarea
                               id="rule-condition"
                               placeholder={`e.g., ${availableFields.includes('PriorityLevel') ? 'PriorityLevel >= 4' : 'field >= value'} && ${availableFields.includes('Category') ? 'Category === "critical"' : 'field === "value"'}`}
                               value={newRule.condition || ''}
                               onChange={(e) => setNewRule({ ...newRule, condition: e.target.value })}
-                              className="font-mono text-sm min-h-[100px]"
+                              className="font-mono text-xs min-h-[80px] sm:min-h-[100px]"
                             />
                             {availableFields.length > 0 && (
                               <div className="text-xs text-gray-500">
-                                Available fields: {availableFields.slice(0, 5).join(', ')}
-                                {availableFields.length > 5 && '...'}
+                                Available fields: {availableFields.slice(0, 3).join(', ')}
+                                {availableFields.length > 3 && '...'}
                               </div>
                             )}
                           </div>
 
                           <div className="space-y-2">
-                            <Label htmlFor="rule-action">Action *</Label>
+                            <Label htmlFor="rule-action" className="text-xs sm:text-sm">Action *</Label>
                             <Textarea
                               id="rule-action"
                               placeholder="e.g., group_tasks_together, assign_to_phase_1, require_skill_overlap"
                               value={newRule.action || ''}
                               onChange={(e) => setNewRule({ ...newRule, action: e.target.value })}
-                              className="min-h-[100px]"
+                              className="min-h-[80px] sm:min-h-[100px] text-xs sm:text-sm"
                             />
                           </div>
                         </div>
 
-                        {/* Source Files Selection */}
+                        {/* Source Files Selection - Mobile Optimized */}
                         <div className="space-y-2">
-                          <Label>Source Files</Label>
-                          <div className="flex flex-wrap gap-2">
+                          <Label className="text-xs sm:text-sm">Source Files</Label>
+                          <div className="flex flex-wrap gap-1 sm:gap-2">
                             {files.map((file) => {
                               const IconComponent = getFileIcon(file.name);
                               return (
                                 <Badge
                                   key={file.id}
                                   variant={newRule.sourceFiles?.includes(file.name) ? "default" : "outline"}
-                                  className="cursor-pointer"
+                                  className="cursor-pointer text-xs"
                                   onClick={() => {
                                     const currentFiles = newRule.sourceFiles || [];
                                     const updatedFiles = currentFiles.includes(file.name)
@@ -511,8 +530,8 @@ export default function RuleBuilder() {
                                     setNewRule({ ...newRule, sourceFiles: updatedFiles });
                                   }}
                                 >
-                                  <IconComponent className="h-3 w-3 mr-1" />
-                                  <span>{file.name}</span>
+                                  <IconComponent className="h-2 w-2 sm:h-3 sm:w-3 mr-1" />
+                                  <span className="truncate max-w-[80px] sm:max-w-none">{file.name}</span>
                                   {newRule.sourceFiles?.includes(file.name) && ' ✓'}
                                 </Badge>
                               );
@@ -527,16 +546,16 @@ export default function RuleBuilder() {
                               checked={newRule.enabled ?? true}
                               onCheckedChange={(enabled) => setNewRule({ ...newRule, enabled })}
                             />
-                            <Label htmlFor="rule-enabled">Enable Rule</Label>
+                            <Label htmlFor="rule-enabled" className="text-xs sm:text-sm">Enable Rule</Label>
                           </div>
                         </div>
 
-                        <div className="flex gap-2 pt-4 border-t">
-                          <Button onClick={handleAddRule} className="flex-1">
-                            <Plus className="h-4 w-4 mr-2" />
+                        <div className="flex flex-col sm:flex-row gap-2 pt-4 border-t">
+                          <Button onClick={handleAddRule} className="flex-1 text-xs sm:text-sm">
+                            <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                             Add Rule
                           </Button>
-                          <Button variant="outline" onClick={() => setShowRuleForm(false)}>
+                          <Button variant="outline" onClick={() => setShowRuleForm(false)} className="text-xs sm:text-sm">
                             Cancel
                           </Button>
                         </div>
@@ -547,46 +566,44 @@ export default function RuleBuilder() {
               </AnimatePresence>
             </TabsContent>
 
-            {/* Natural Language Tab */}
-            <TabsContent value="natural" className="space-y-6 p-6">
+            {/* Natural Language Tab - Mobile Optimized */}
+            <TabsContent value="natural" className="space-y-4 sm:space-y-6 p-3 sm:p-6">
               <Card>
                 <CardHeader className="bg-gradient-to-r from-purple-50 to-pink-50 pb-3">
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <MessageSquare className="h-5 w-5 text-purple-600" />
-                    Natural Language Rule Builder
+                  <CardTitle className="flex items-center gap-2 text-sm sm:text-lg">
+                    <MessageSquare className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />
+                    <span className="hidden sm:inline">Natural Language Rule Builder</span>
+                    <span className="sm:hidden">Natural Language</span>
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4 p-6">
+                <CardContent className="space-y-4 p-3 sm:p-6">
                   <div className="space-y-2">
-                    <Label>Describe your rule in plain English</Label>
+                    <Label className="text-xs sm:text-sm">Describe your rule in plain English</Label>
                     <Textarea
-                      placeholder={`e.g., 'Tasks ${availableFields.includes('TaskID') ? 'T1 and T2' : 'with high priority'} must always run together in the same phase' or 'No more than 2 high priority tasks per worker per phase' or 'Workers in ${availableFields.includes('WorkerGroup') ? 'GroupA' : 'specific groups'} should only handle tasks requiring ${availableFields.includes('RequiredSkills') ? 'JavaScript skills' : 'specific skills'}'`}
+                      placeholder={`e.g., 'Tasks ${availableFields.includes('TaskID') ? 'T1 and T2' : 'with high priority'} must always run together in the same phase' or 'No more than 2 high priority tasks per worker per phase'`}
                       value={naturalLanguageInput}
                       onChange={(e) => setNaturalLanguageInput(e.target.value)}
-                      className="min-h-[120px]"
+                      className="min-h-[80px] sm:min-h-[120px] text-xs sm:text-sm"
                     />
                   </div>
                   
                   <div className="space-y-3">
-                    <Label className="text-sm font-medium">Example Queries:</Label>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <Label className="text-xs sm:text-sm font-medium">Example Queries:</Label>
+                    <div className="grid grid-cols-1 gap-2">
                       {[
                         `Tasks ${availableFields.includes('TaskID') ? 'T3 and T5' : 'with similar priority'} must run in the same phase`,
                         'No more than 2 tasks for any worker per phase',
-                        `Workers in ${availableFields.includes('WorkerGroup') ? 'GroupB' : 'specific groups'} should only do tasks with skill "ml"`,
-                        `High priority ${availableFields.includes('ClientID') ? 'clients' : 'items'} get assigned first`,
-                        `Tasks requiring ${availableFields.includes('RequiredSkills') ? '"testing" skills' : 'specific skills'} need phase overlap`,
-                        'Maximum 3 concurrent tasks for any single worker'
+                        `High priority ${availableFields.includes('ClientID') ? 'clients' : 'items'} get assigned first`
                       ].map((example, index) => (
                         <Button
                           key={index}
                           variant="outline"
                           size="sm"
                           onClick={() => setNaturalLanguageInput(example)}
-                          className="text-left h-auto p-3 text-xs"
+                          className="text-left h-auto p-2 sm:p-3 text-xs justify-start"
                         >
                           <Lightbulb className="h-3 w-3 mr-2 flex-shrink-0" />
-                          <span>{example}</span>
+                          <span className="truncate">{example}</span>
                         </Button>
                       ))}
                     </div>
@@ -595,16 +612,16 @@ export default function RuleBuilder() {
                   <Button 
                     onClick={handleNaturalLanguageConversion}
                     disabled={isProcessingNL || !naturalLanguageInput.trim()}
-                    className="w-full"
+                    className="w-full text-xs sm:text-sm"
                   >
                     {isProcessingNL ? (
                       <>
-                        <div className="animate-spin h-4 w-4 mr-2 border-2 border-white border-t-transparent rounded-full" />
+                        <div className="animate-spin h-3 w-3 sm:h-4 sm:w-4 mr-2 border-2 border-white border-t-transparent rounded-full" />
                         Processing with AI...
                       </>
                     ) : (
                       <>
-                        <Wand2 className="h-4 w-4 mr-2" />
+                        <Wand2 className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                         Convert to Structured Rule
                       </>
                     )}
@@ -612,18 +629,18 @@ export default function RuleBuilder() {
                 </CardContent>
               </Card>
 
-              {/* AI Suggestions */}
+              {/* AI Suggestions - Mobile Optimized */}
               {aiSuggestions.length > 0 && (
                 <Card>
                   <CardHeader className="bg-gradient-to-r from-orange-50 to-yellow-50 pb-3">
-                    <CardTitle className="flex items-center gap-2 text-lg">
-                      <Sparkles className="h-5 w-5 text-purple-600" />
+                    <CardTitle className="flex items-center gap-2 text-sm sm:text-lg">
+                      <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />
                       AI Rule Suggestions
-                      <Badge variant="outline">{aiSuggestions.length}</Badge>
+                      <Badge variant="outline" className="text-xs">{aiSuggestions.length}</Badge>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="p-6">
-                    <ScrollArea className="h-80">
+                  <CardContent className="p-3 sm:p-6">
+                    <ScrollArea className="h-60 sm:h-80">
                       <div className="space-y-3">
                         {aiSuggestions.map((suggestion, index) => (
                           <motion.div
@@ -631,12 +648,12 @@ export default function RuleBuilder() {
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: index * 0.1 }}
-                            className="p-4 border rounded-lg bg-purple-50 border-purple-200"
+                            className="p-3 sm:p-4 border rounded-lg bg-purple-50 border-purple-200"
                           >
                             <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <h4 className="font-medium text-purple-800">{suggestion.name}</h4>
-                                <p className="text-sm text-purple-600 mt-1">{suggestion.description}</p>
+                              <div className="flex-1 min-w-0">
+                                <h4 className="font-medium text-purple-800 text-xs sm:text-sm truncate">{suggestion.name}</h4>
+                                <p className="text-xs text-purple-600 mt-1 line-clamp-2">{suggestion.description}</p>
                                 <div className="flex items-center gap-2 mt-2">
                                   <Badge variant="outline" className="text-xs">
                                     {getRuleTypeInfo(suggestion.type).label}
@@ -653,6 +670,7 @@ export default function RuleBuilder() {
                                   setSelectedRuleType(suggestion.type);
                                   setShowRuleForm(true);
                                 }}
+                                className="ml-2 text-xs"
                               >
                                 <Plus className="h-3 w-3 mr-1" />
                                 Use
@@ -667,25 +685,28 @@ export default function RuleBuilder() {
               )}
             </TabsContent>
 
-            {/* Active Rules Tab */}
-            <TabsContent value="active" className="space-y-6 p-6">
+            {/* Active Rules Tab - Mobile Optimized */}
+            <TabsContent value="active" className="space-y-4 sm:space-y-6 p-3 sm:p-6">
               <Card>
                 <CardHeader className="bg-gradient-to-r from-green-50 to-blue-50 pb-3">
-                  <CardTitle className="text-lg">Active Business Rules ({rules.filter(r => r.enabled).length}/{rules.length})</CardTitle>
+                  <CardTitle className="text-sm sm:text-lg">
+                    <span className="hidden sm:inline">Active Business Rules ({rules.filter(r => r.enabled).length}/{rules.length})</span>
+                    <span className="sm:hidden">Rules ({rules.filter(r => r.enabled).length}/{rules.length})</span>
+                  </CardTitle>
                 </CardHeader>
-                <CardContent className="p-6">
+                <CardContent className="p-3 sm:p-6">
                   {rules.length === 0 ? (
-                    <div className="text-center py-12 text-gray-500">
-                      <Settings className="h-16 w-16 mx-auto mb-4 text-gray-300" />
-                      <h3 className="text-lg font-medium mb-2">No Rules Defined</h3>
-                      <p className="text-sm mb-4">Create your first business rule to get started</p>
-                      <Button onClick={() => setActiveTab('builder')}>
-                        <Plus className="h-4 w-4 mr-2" />
+                    <div className="text-center py-8 sm:py-12 text-gray-500">
+                      <Settings className="h-12 w-12 sm:h-16 sm:w-16 mx-auto mb-4 text-gray-300" />
+                      <h3 className="text-sm sm:text-lg font-medium mb-2">No Rules Defined</h3>
+                      <p className="text-xs sm:text-sm mb-4">Create your first business rule to get started</p>
+                      <Button onClick={() => setActiveTab('builder')} size="sm">
+                        <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                         Create First Rule
                       </Button>
                     </div>
                   ) : (
-                    <div className="space-y-4">
+                    <div className="space-y-3 sm:space-y-4">
                       {rules.map((rule, index) => {
                         const ruleTypeInfo = getRuleTypeInfo(rule.type);
                         const IconComponent = ruleTypeInfo.icon;
@@ -696,18 +717,18 @@ export default function RuleBuilder() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: index * 0.1 }}
-                            className={`border rounded-lg p-4 ${rule.enabled ? 'bg-white' : 'bg-gray-50 opacity-75'}`}
+                            className={`border rounded-lg p-3 sm:p-4 ${rule.enabled ? 'bg-white' : 'bg-gray-50 opacity-75'}`}
                           >
                             <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <div className="flex items-center gap-3 mb-2">
-                                  <IconComponent className="h-5 w-5 text-gray-600" />
-                                  <h3 className="font-semibold text-lg">{rule.name}</h3>
-                                  <Badge variant="outline" className={ruleTypeInfo.color}>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 sm:gap-3 mb-2">
+                                  <IconComponent className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600 flex-shrink-0" />
+                                  <h3 className="font-semibold text-sm sm:text-lg truncate">{rule.name}</h3>
+                                  <Badge variant="outline" className={`${ruleTypeInfo.color} text-xs flex-shrink-0`}>
                                     {ruleTypeInfo.label}
                                   </Badge>
-                                  <Badge variant="outline" className="text-xs">
-                                    Priority {rule.priority}
+                                  <Badge variant="outline" className="text-xs flex-shrink-0">
+                                    P{rule.priority}
                                   </Badge>
                                   <Switch
                                     checked={rule.enabled}
@@ -716,76 +737,47 @@ export default function RuleBuilder() {
                                 </div>
                                 
                                 {rule.description && (
-                                  <p className="text-gray-600 mb-3">{rule.description}</p>
+                                  <p className="text-gray-600 mb-3 text-xs sm:text-sm line-clamp-2">{rule.description}</p>
                                 )}
                                 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                                <div className="grid grid-cols-1 gap-3 sm:gap-4 mb-3">
                                   <div>
                                     <Label className="text-xs text-gray-500 font-medium">CONDITION</Label>
-                                    <pre className="text-sm bg-gray-50 p-3 rounded font-mono overflow-x-auto border mt-1">
+                                    <pre className="text-xs bg-gray-50 p-2 sm:p-3 rounded font-mono overflow-x-auto border mt-1 max-h-20 sm:max-h-none">
                                       {rule.condition}
                                     </pre>
                                   </div>
                                   <div>
                                     <Label className="text-xs text-gray-500 font-medium">ACTION</Label>
-                                    <div className="text-sm bg-gray-50 p-3 rounded border mt-1">
+                                    <div className="text-xs bg-gray-50 p-2 sm:p-3 rounded border mt-1 max-h-20 overflow-y-auto">
                                       {rule.action}
                                     </div>
                                   </div>
                                 </div>
                                 
-                                {rule.sourceFiles && rule.sourceFiles.length > 0 && (
-                                  <div className="flex items-center gap-2 mb-2">
-                                    <Label className="text-xs text-gray-500 font-medium">SOURCE FILES:</Label>
-                                    <div className="flex gap-1">
-                                      {rule.sourceFiles.map((fileName, idx) => {
-                                        const IconComponent = getFileIcon(fileName);
-                                        return (
-                                          <Badge key={idx} variant="outline" className="text-xs">
-                                            <IconComponent className="h-3 w-3 mr-1" />
-                                            <span>{fileName}</span>
-                                          </Badge>
-                                        );
-                                      })}
-                                    </div>
-                                  </div>
-                                )}
-                                
                                 <div className="text-xs text-gray-500">
-                                  Created: {rule.createdAt?.toLocaleDateString() ?? 'N/A'} • • 
-                                  Modified: {rule.lastModified?.toLocaleDateString() ?? 'N/A'}
+                                  Created: {rule.createdAt?.toLocaleDateString() ?? 'N/A'}
                                 </div>
                               </div>
                               
-                              <div className="flex gap-2 ml-4">
-                                {['coRun', 'phaseWindow', 'loadLimit', 'slotRestriction', 'patternMatch', 'precedence', 'aiGenerated'].includes(rule.type) && (
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    onClick={() => testRule(rule as BusinessRule)}
-                                    title="Test Rule"
-                                  >
-                                    <TestTube className="h-4 w-4" />
-                                  </Button>
-                                )}
+                              <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 ml-2 sm:ml-4 flex-shrink-0">
                                 <Button
                                   size="sm"
                                   variant="outline"
-                                  onClick={() => {
-                                    navigator.clipboard.writeText(JSON.stringify(rule, null, 2));
-                                    toast.success('Rule copied to clipboard');
-                                  }}
-                                  title="Copy Rule"
+                                  onClick={() => testRule(rule as BusinessRule)}
+                                  title="Test Rule"
+                                  className="h-8 w-8 p-0"
                                 >
-                                  <Copy className="h-4 w-4" />
+                                  <TestTube className="h-3 w-3 sm:h-4 sm:w-4" />
                                 </Button>
                                 <Button
                                   size="sm"
                                   variant="outline"
                                   onClick={() => removeRule(rule.id)}
                                   title="Delete Rule"
+                                  className="h-8 w-8 p-0"
                                 >
-                                  <Trash2 className="h-4 w-4" />
+                                  <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
                                 </Button>
                               </div>
                             </div>
@@ -799,18 +791,18 @@ export default function RuleBuilder() {
                               >
                                 <div className="flex items-center gap-2 mb-2">
                                   <TestTube className="h-4 w-4 text-blue-600" />
-                                  <span className="font-medium text-blue-800">Test Results</span>
+                                  <span className="font-medium text-blue-800 text-xs sm:text-sm">Test Results</span>
                                 </div>
-                                <div className="grid grid-cols-3 gap-4 text-sm">
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4 text-xs sm:text-sm">
                                   <div>
                                     <span className="text-blue-600 font-medium">Matches:</span>
                                     <span className="ml-2">{testResults.matchCount}</span>
                                   </div>
                                   <div>
-                                    <span className="text-blue-600 font-medium">Affected Rows:</span>
+                                    <span className="text-blue-600 font-medium">Affected:</span>
                                     <span className="ml-2">{testResults.affectedRows}</span>
                                   </div>
-                                  <div>
+                                  <div className="col-span-2 sm:col-span-1">
                                     <span className="text-blue-600 font-medium">Status:</span>
                                     <Badge variant={testResults.status === 'passed' ? 'default' : 'destructive'} className="ml-2 text-xs">
                                       {testResults.status}
@@ -828,19 +820,19 @@ export default function RuleBuilder() {
               </Card>
             </TabsContent>
 
-            {/* JSON Preview Tab */}
-            <TabsContent value="preview" className="space-y-6 p-6">
+            {/* JSON Preview Tab - Mobile Optimized */}
+            <TabsContent value="preview" className="space-y-4 sm:space-y-6 p-3 sm:p-6">
               <Card>
                 <CardHeader className="bg-gradient-to-r from-slate-50 to-blue-50 pb-3">
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <Code2 className="h-5 w-5" />
+                  <CardTitle className="flex items-center gap-2 text-sm sm:text-lg">
+                    <Code2 className="h-4 w-4 sm:h-5 sm:w-5" />
                     Rules JSON Configuration
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="p-6">
+                <CardContent className="p-3 sm:p-6">
                   <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <div className="text-sm text-gray-600">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                      <div className="text-xs sm:text-sm text-gray-600">
                         {rules.length} rules • {rules.filter(r => r.enabled).length} enabled
                       </div>
                       <div className="flex gap-2">
@@ -852,19 +844,20 @@ export default function RuleBuilder() {
                             navigator.clipboard.writeText(json);
                             toast.success('JSON copied to clipboard');
                           }}
+                          className="text-xs"
                         >
-                          <Copy className="h-4 w-4 mr-2" />
-                          Copy JSON
+                          <Copy className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                          Copy
                         </Button>
-                        <Button size="sm" onClick={exportRules}>
-                          <Download className="h-4 w-4 mr-2" />
+                        <Button size="sm" onClick={exportRules} className="text-xs">
+                          <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                           Download
                         </Button>
                       </div>
                     </div>
                     
-                    <ScrollArea className="h-96 w-full">
-                      <pre className="text-sm bg-gray-50 p-4 rounded-lg overflow-x-auto border">
+                    <ScrollArea className="h-60 sm:h-96 w-full">
+                      <pre className="text-xs bg-gray-50 p-3 sm:p-4 rounded-lg overflow-x-auto border">
                         {JSON.stringify({
                           rules: rules.map(rule => ({
                             type: rule.type,
@@ -893,16 +886,17 @@ export default function RuleBuilder() {
             </TabsContent>
           </Card>
         </Tabs>
-
-        <div className="flex justify-end">
-          <Button 
-            onClick={() => setCurrentStep(3)}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-8 py-3 text-lg shadow-lg hover:shadow-xl"
-          >
-            Continue to Priorities
-            <Sparkles className="h-5 w-5 ml-2" />
-          </Button>
-        </div>
+      </div>
+      
+      {/* Continue Button - Fixed Position on Mobile */}
+      <div className="fixed bottom-4 left-4 right-4 sm:relative sm:bottom-auto sm:left-auto sm:right-auto sm:flex sm:justify-end sm:mt-6 z-10">
+        <Button 
+          onClick={() => setCurrentStep(3)}
+          className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-6 sm:px-8 py-3 text-sm sm:text-lg shadow-xl hover:shadow-2xl hover-lift"
+        >
+          Continue to Priorities
+          <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 ml-2" />
+        </Button>
       </div>
     </div>
   );

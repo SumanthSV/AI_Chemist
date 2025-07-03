@@ -29,7 +29,8 @@ import {
   Filter,
   Zap,
   Shield,
-  ArrowRight
+  ArrowRight,
+  Monitor
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -110,59 +111,59 @@ export default function Navbar() {
 
   return (
     <nav className="border-b bg-white/95 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
-      <div className="flex h-16 items-center justify-between px-4 sm:px-6">
-        <div className="flex items-center gap-2 sm:gap-3">
-          <div className="flex items-center gap-2">
-            <div className="p-1.5 sm:p-2 bg-gradient-to-br from-slate-600 to-blue-600 rounded-lg shadow-sm">
-              <Sparkles className="h-4 w-4 sm:h-6 sm:w-6 text-white" />
+      <div className="flex h-12 sm:h-16 items-center justify-between px-2 sm:px-4 lg:px-6">
+        <div className="flex items-center gap-1 sm:gap-2 lg:gap-3 min-w-0">
+          <div className="flex items-center gap-1 sm:gap-2">
+            <div className="p-1 sm:p-1.5 lg:p-2 bg-gradient-to-br from-slate-600 to-blue-600 rounded-md sm:rounded-lg shadow-sm">
+              <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 lg:h-6 lg:w-6 text-white" />
             </div>
-            <h1 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-slate-800 to-blue-600 bg-clip-text text-transparent">
+            <h1 className="text-sm sm:text-lg lg:text-xl font-bold bg-gradient-to-r from-slate-800 to-blue-600 bg-clip-text text-transparent truncate">
               <span className="hidden sm:inline">Data Alchemist</span>
               <span className="sm:hidden">DA</span>
             </h1>
           </div>
         </div>
         
-        <div className="flex items-center gap-1 sm:gap-2">
+        <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
           <Dialog open={showRoadmap} onOpenChange={setShowRoadmap}>
             <DialogTrigger asChild>
-              <Button variant="ghost" size="sm" className="hover:bg-gray-100 transition-all duration-200 text-xs sm:text-sm">
-                <HelpCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              <Button variant="ghost" size="sm" className="hover:bg-gray-100 transition-all duration-200 text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3">
+                <HelpCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 flex-shrink-0" />
                 <span className="hidden sm:inline">How It Works</span>
                 <span className="sm:hidden">Help</span>
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-4xl max-h-[80vh] p-0 mx-4">
-              <DialogHeader className="p-4 sm:p-6 pb-4 bg-gradient-to-r from-slate-800 to-blue-600 text-white">
-                <DialogTitle className="text-xl sm:text-2xl font-bold flex items-center gap-2 sm:gap-3">
-                  <Sparkles className="h-5 w-5 sm:h-6 sm:w-6" />
+            <DialogContent className="max-w-4xl max-h-[80vh] p-0 mx-2 sm:mx-4">
+              <DialogHeader className="p-3 sm:p-4 lg:p-6 pb-3 sm:pb-4 bg-gradient-to-r from-slate-800 to-blue-600 text-white">
+                <DialogTitle className="text-lg sm:text-xl lg:text-2xl font-bold flex items-center gap-2 sm:gap-3">
+                  <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 flex-shrink-0" />
                   <span className="hidden sm:inline">Data Alchemist - Complete Feature Roadmap</span>
                   <span className="sm:hidden">Feature Roadmap</span>
                 </DialogTitle>
-                <p className="text-blue-100 mt-2 text-sm sm:text-base">
+                <p className="text-blue-100 mt-2 text-xs sm:text-sm lg:text-base">
                   Transform your raw data into valuable insights with AI-powered processing
                 </p>
               </DialogHeader>
               
-              <ScrollArea className="h-[60vh] p-4 sm:p-6">
-                <div className="space-y-6 sm:space-y-8">
+              <ScrollArea className="h-[60vh] p-3 sm:p-4 lg:p-6">
+                <div className="space-y-4 sm:space-y-6 lg:space-y-8">
                   {roadmapFeatures.map((category, categoryIndex) => {
                     const CategoryIcon = category.icon;
                     return (
-                      <div key={category.category} className="space-y-4">
-                        <div className="flex items-center gap-2 sm:gap-3 mb-4">
-                          <div className={`p-2 sm:p-3 rounded-lg bg-gradient-to-r ${category.color} shadow-lg`}>
-                            <CategoryIcon className="h-4 w-4 sm:h-6 sm:w-6 text-white" />
+                      <div key={category.category} className="space-y-3 sm:space-y-4">
+                        <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                          <div className={`p-1.5 sm:p-2 lg:p-3 rounded-lg bg-gradient-to-r ${category.color} shadow-lg flex-shrink-0`}>
+                            <CategoryIcon className="h-3 w-3 sm:h-4 sm:w-4 lg:h-6 lg:w-6 text-white" />
                           </div>
-                          <div>
-                            <h3 className="text-lg sm:text-xl font-bold text-gray-900">{category.category}</h3>
+                          <div className="min-w-0">
+                            <h3 className="text-sm sm:text-lg lg:text-xl font-bold text-gray-900 truncate">{category.category}</h3>
                             <div className="flex items-center gap-2 mt-1">
                               <Badge variant="outline" className="text-xs">
                                 {category.features.length} features
                               </Badge>
                               {categoryIndex <= currentStep && (
                                 <Badge className="text-xs bg-green-100 text-green-800">
-                                  <CheckCircle2 className="h-3 w-3 mr-1" />
+                                  <CheckCircle2 className="h-2 w-2 sm:h-3 sm:w-3 mr-1" />
                                   Available
                                 </Badge>
                               )}
@@ -170,20 +171,20 @@ export default function Navbar() {
                           </div>
                         </div>
                         
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 ml-2 sm:ml-4 pl-2 sm:pl-4 border-l-2 border-gray-200">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-3 lg:gap-4 ml-2 sm:ml-4 pl-2 sm:pl-4 border-l-2 border-gray-200">
                           {category.features.map((feature, featureIndex) => {
                             const FeatureIcon = feature.icon;
                             return (
                               <div 
                                 key={feature.name}
-                                className="flex items-start gap-2 sm:gap-3 p-3 sm:p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                                className="flex items-start gap-2 sm:gap-3 p-2 sm:p-3 lg:p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                               >
-                                <div className="p-1.5 sm:p-2 bg-white rounded-lg shadow-sm">
-                                  <FeatureIcon className="h-3 w-3 sm:h-4 sm:w-4 text-gray-600" />
+                                <div className="p-1 sm:p-1.5 lg:p-2 bg-white rounded-lg shadow-sm flex-shrink-0">
+                                  <FeatureIcon className="h-2 w-2 sm:h-3 sm:w-3 lg:h-4 lg:w-4 text-gray-600" />
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                  <h4 className="font-semibold text-gray-900 text-xs sm:text-sm">{feature.name}</h4>
-                                  <p className="text-xs text-gray-600 mt-1">{feature.description}</p>
+                                  <h4 className="font-semibold text-gray-900 text-xs sm:text-sm truncate">{feature.name}</h4>
+                                  <p className="text-xs text-gray-600 mt-1 line-clamp-2">{feature.description}</p>
                                 </div>
                               </div>
                             );
@@ -194,22 +195,22 @@ export default function Navbar() {
                   })}
                 </div>
                 
-                <div className="mt-6 sm:mt-8 p-4 sm:p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200">
-                  <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
-                    <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
+                <div className="mt-4 sm:mt-6 lg:mt-8 p-3 sm:p-4 lg:p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200">
+                  <h3 className="text-sm sm:text-base lg:text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+                    <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-blue-600 flex-shrink-0" />
                     Why Choose Data Alchemist?
                   </h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                     <div className="text-center">
-                      <div className="text-xl sm:text-2xl font-bold text-blue-600">95%</div>
+                      <div className="text-lg sm:text-xl lg:text-2xl font-bold text-blue-600">95%</div>
                       <div className="text-xs sm:text-sm text-gray-600">Data Quality Improvement</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-xl sm:text-2xl font-bold text-green-600">80%</div>
+                      <div className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600">80%</div>
                       <div className="text-xs sm:text-sm text-gray-600">Time Savings</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-xl sm:text-2xl font-bold text-purple-600">100%</div>
+                      <div className="text-lg sm:text-xl lg:text-2xl font-bold text-purple-600">100%</div>
                       <div className="text-xs sm:text-sm text-gray-600">AI-Powered</div>
                     </div>
                   </div>
@@ -222,11 +223,11 @@ export default function Navbar() {
             variant="ghost" 
             size="sm"
             onClick={toggleAiAssistant}
-            className="hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 relative text-xs sm:text-sm"
+            className="hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 relative text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3 hidden sm:flex"
           >
-            <MessageSquare className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-            <span className="hidden sm:inline">AI Chat</span>
-            <span className="sm:hidden">AI</span>
+            <MessageSquare className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 flex-shrink-0" />
+            <span className="hidden lg:inline">AI Chat</span>
+            <span className="lg:hidden">AI</span>
             <div className="absolute -top-1 -right-1 w-2 h-2 sm:w-3 sm:h-3 bg-green-500 rounded-full animate-pulse"></div>
           </Button>
           
@@ -234,12 +235,20 @@ export default function Navbar() {
             variant="ghost" 
             size="sm"
             disabled={currentStep < 4}
-            className="hover:bg-green-50 hover:text-green-700 transition-all duration-200 disabled:opacity-50 text-xs sm:text-sm"
+            className="hover:bg-green-50 hover:text-green-700 transition-all duration-200 disabled:opacity-50 text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3"
           >
-            <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-            <span className="hidden sm:inline">Export</span>
-            <span className="sm:hidden">Export</span>
+            <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 flex-shrink-0" />
+            <span className="hidden lg:inline">Export</span>
+            <span className="lg:hidden">Export</span>
           </Button>
+        </div>
+      </div>
+      
+      {/* Mobile Notice */}
+      <div className="sm:hidden bg-amber-50 border-t border-amber-200 px-3 py-2">
+        <div className="flex items-center gap-2 text-amber-800">
+          <Monitor className="h-4 w-4 flex-shrink-0" />
+          <p className="text-xs">For full features, use desktop mode</p>
         </div>
       </div>
     </nav>

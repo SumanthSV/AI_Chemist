@@ -268,42 +268,42 @@ export default function FileUploader() {
 
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 bg-pattern-dots">
-      <div className="max-w-7xl mx-auto px-6 py-6 space-y-6">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
         
         {/* Header Section */}
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-          <div className="min-w-0 flex-1">
-            <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-slate-800 to-blue-600 bg-clip-text text-transparent mb-2">
+        <div className="flex flex-col gap-3 sm:gap-4">
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-slate-800 to-blue-600 bg-clip-text text-transparent mb-2">
               AI-Powered Data Ingestion
             </h1>
-            <p className="text-gray-600 font-medium text-sm lg:text-base">
-              Upload CSV or XLSX files for Clients, Workers, and Tasks. Our AI will automatically detect and map your data structure.
+            <p className="text-gray-600 font-medium text-sm sm:text-base">
+              Upload CSV or XLSX files. AI will detect and map your data structure.
             </p>
           </div>
           
-          <div className="flex items-center gap-3 flex-shrink-0">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <Badge variant="outline" className="bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-700 border-blue-200 text-xs shadow-sm">
               <Brain className="h-3 w-3 mr-1" />
               AI Enhanced
             </Badge>
-            <Button onClick={downloadSampleFiles} variant="outline" size="sm" className="hover-lift">
-              <Download className="h-4 w-4 mr-2" />
-              Download Samples
+            <Button onClick={downloadSampleFiles} variant="outline" size="sm" className="hover-lift text-xs sm:text-sm">
+              <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              Samples
             </Button>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Upload Area - Simplified and Clean */}
+        <div className="grid grid-cols-1 gap-4 sm:gap-6">
+          {/* Upload Area - Mobile Optimized */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
           >
-            <Card className="h-80 shadow-lg border-2 border-dashed border-gray-200 hover:border-blue-400 transition-all duration-300">
-              <CardContent className="p-6 h-full">
+            <Card className="shadow-lg border-2 border-dashed border-gray-200 hover:border-blue-400 transition-all duration-300">
+              <CardContent className="p-4 sm:p-6">
                 <div
-                  className="h-full flex flex-col items-center justify-center text-center cursor-pointer group"
+                  className="flex flex-col items-center justify-center text-center cursor-pointer group min-h-[200px] sm:min-h-[280px]"
                   onDragOver={handleDragOver}
                   onDrop={handleDrop}
                   onClick={() => document.getElementById('file-input')?.click()}
@@ -312,30 +312,30 @@ export default function FileUploader() {
                     <div className="space-y-4 w-full">
                       <div className="flex items-center justify-center">
                         <div className="relative">
-                          <CloudUpload className="h-16 w-16 text-blue-500 animate-bounce" />
+                          <CloudUpload className="h-12 w-12 sm:h-16 sm:w-16 text-blue-500 animate-bounce" />
                           <div className="absolute inset-0 bg-blue-500 opacity-20 rounded-full animate-ping"></div>
                         </div>
                       </div>
                       <div className="space-y-3">
-                        <p className="text-blue-700 font-semibold text-lg">AI Processing Files...</p>
+                        <p className="text-blue-700 font-semibold text-sm sm:text-lg">AI Processing Files...</p>
                         <Progress value={Math.max(0, Math.min(100, processingProgress || 0))} className="h-2" />
-                        <p className="text-sm text-blue-600">{Math.round(processingProgress)}% complete</p>
+                        <p className="text-xs sm:text-sm text-blue-600">{Math.round(processingProgress)}% complete</p>
                       </div>
                     </div>
                   ) : (
                     <>
-                      <div className="mb-6 group-hover:scale-110 transition-transform duration-300">
-                        <CloudUpload className="h-20 w-20 text-gray-400 group-hover:text-blue-500 transition-colors duration-300" />
+                      <div className="mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <CloudUpload className="h-16 w-16 sm:h-20 sm:w-20 text-gray-400 group-hover:text-blue-500 transition-colors duration-300" />
                       </div>
-                      <h3 className="text-xl font-semibold text-gray-700 mb-2 group-hover:text-blue-600 transition-colors">
+                      <h3 className="text-lg sm:text-xl font-semibold text-gray-700 mb-2 group-hover:text-blue-600 transition-colors">
                         Upload Your Data Files
                       </h3>
-                      <p className="text-gray-500 mb-4">
-                        Drag and drop files here or click to browse
+                      <p className="text-gray-500 mb-4 text-sm sm:text-base">
+                        Drag and drop files here or tap to browse
                       </p>
-                      <div className="flex items-center gap-2 text-sm text-gray-400">
+                      <div className="flex flex-col sm:flex-row items-center gap-2 text-xs sm:text-sm text-gray-400">
                         <span>Supports CSV and XLSX files</span>
-                        <span>•</span>
+                        <span className="hidden sm:inline">•</span>
                         <span className="flex items-center gap-1">
                           <Brain className="h-3 w-3" />
                           AI Detection
@@ -357,70 +357,72 @@ export default function FileUploader() {
             </Card>
           </motion.div>
 
-          {/* AI Features - Clean and Informative */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <Card className="h-80 shadow-lg">
-              <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 pb-3">
-                <CardTitle className="flex items-center gap-2 text-blue-800 text-lg">
-                  <Sparkles className="h-5 w-5" />
-                  AI Data Intelligence
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4 p-6">
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Database className="h-4 w-4 text-blue-600" />
+          {/* AI Features - Hidden on Mobile */}
+          <div className="hidden lg:block">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <Card className="shadow-lg">
+                <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 pb-3">
+                  <CardTitle className="flex items-center gap-2 text-blue-800 text-lg">
+                    <Sparkles className="h-5 w-5" />
+                    AI Data Intelligence
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4 p-6">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Database className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-sm text-gray-800">Smart Entity Detection</h4>
+                      <p className="text-xs text-gray-600 mt-1">
+                        Automatically identifies if your file contains Client, Worker, or Task data
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-medium text-sm text-gray-800">Smart Entity Detection</h4>
-                    <p className="text-xs text-gray-600 mt-1">
-                      Automatically identifies if your file contains Client, Worker, or Task data
-                    </p>
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <ArrowRight className="h-4 w-4 text-green-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-sm text-gray-800">Intelligent Header Mapping</h4>
+                      <p className="text-xs text-gray-600 mt-1">
+                        Maps wrongly named or rearranged columns to the correct data structure
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <ArrowRight className="h-4 w-4 text-green-600" />
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <CheckCircle2 className="h-4 w-4 text-orange-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-sm text-gray-800">Data Format Validation</h4>
+                      <p className="text-xs text-gray-600 mt-1">
+                        Validates and suggests corrections for data formats and patterns
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-medium text-sm text-gray-800">Intelligent Header Mapping</h4>
-                    <p className="text-xs text-gray-600 mt-1">
-                      Maps wrongly named or rearranged columns to the correct data structure
-                    </p>
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <TrendingUp className="h-4 w-4 text-purple-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-sm text-gray-800">Cross-File Relationship Detection</h4>
+                      <p className="text-xs text-gray-600 mt-1">
+                        Identifies relationships and references between uploaded files
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <CheckCircle2 className="h-4 w-4 text-orange-600" />
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-sm text-gray-800">Data Format Validation</h4>
-                    <p className="text-xs text-gray-600 mt-1">
-                      Validates and suggests corrections for data formats and patterns
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <TrendingUp className="h-4 w-4 text-purple-600" />
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-sm text-gray-800">Cross-File Relationship Detection</h4>
-                    <p className="text-xs text-gray-600 mt-1">
-                      Identifies relationships and references between uploaded files
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </div>
         </div>
 
-        {/* AI Processing Results with Expandable Content */}
+        {/* AI Processing Results - Mobile Optimized */}
         <AnimatePresence>
           {showAIResults && aiResults.length > 0 && (
             <motion.div
@@ -431,17 +433,17 @@ export default function FileUploader() {
             >
               <Card className="border-blue-200 bg-blue-50 shadow-lg">
                 <CardHeader className="pb-3">
-                  <CardTitle className="flex items-center gap-2 text-blue-800 text-lg">
-                    <Brain className="h-5 w-5" />
+                  <CardTitle className="flex items-center gap-2 text-blue-800 text-sm sm:text-lg">
+                    <Brain className="h-4 w-4 sm:h-5 sm:w-5" />
                     AI Processing Results
-                    <Badge variant="outline" className="bg-blue-100 text-blue-800">
-                      {aiResults.length} files processed
+                    <Badge variant="outline" className="bg-blue-100 text-blue-800 text-xs">
+                      {aiResults.length} files
                     </Badge>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="pt-0">
-                  <ScrollArea className="h-80 w-full">
-                    <div className="space-y-4 pr-4">
+                  <ScrollArea className="h-60 sm:h-80 w-full">
+                    <div className="space-y-3 sm:space-y-4 pr-2 sm:pr-4">
                       {aiResults.map((result, index) => {
                         const file = files.find(f => f.id === result.fileId);
                         if (!file) return null;
@@ -452,48 +454,48 @@ export default function FileUploader() {
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: index * 0.1 }}
-                            className="bg-white rounded-lg border border-blue-200 p-4 shadow-sm"
+                            className="bg-white rounded-lg border border-blue-200 p-3 sm:p-4 shadow-sm"
                           >
-                            <div className="space-y-3">
+                            <div className="space-y-2 sm:space-y-3">
                               {/* File Header */}
                               <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                  <FileText className="h-5 w-5 text-blue-600" />
-                                  <div>
-                                    <h4 className="font-medium text-gray-900">{file.name}</h4>
-                                    <p className="text-sm text-gray-600">{file.data.length} rows • {file.headers.length} columns</p>
+                                <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                                  <FileText className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 flex-shrink-0" />
+                                  <div className="min-w-0">
+                                    <h4 className="font-medium text-gray-900 text-sm sm:text-base truncate">{file.name}</h4>
+                                    <p className="text-xs sm:text-sm text-gray-600">{file.data.length} rows • {file.headers.length} columns</p>
                                   </div>
                                 </div>
                                 <Button
                                   size="sm"
                                   variant="ghost"
                                   onClick={() => handleDeleteFile(file.id, file.name)}
-                                  className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                                  className="text-red-500 hover:text-red-700 hover:bg-red-50 h-8 w-8 p-0 flex-shrink-0"
                                 >
-                                  <Trash2 className="h-4 w-4" />
+                                  <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
                                 </Button>
                               </div>
                               
                               {/* AI Detection Results */}
-                              <div className="flex items-center gap-3">
-                                <Badge variant="outline" className={`${getEntityColor(result.entityType)} font-medium`}>
+                              <div className="flex flex-wrap items-center gap-2">
+                                <Badge variant="outline" className={`${getEntityColor(result.entityType)} font-medium text-xs`}>
                                   {getEntityIcon(result.entityType)}
                                   <span className="ml-1">{result.entityType.toUpperCase()}</span>
                                 </Badge>
-                                <Badge variant="outline" className={`${getConfidenceColor(result.confidence)} border-current`}>
+                                <Badge variant="outline" className={`${getConfidenceColor(result.confidence)} border-current text-xs`}>
                                   {Math.round(result.confidence * 100)}% confidence
                                 </Badge>
                                 {result.confidence >= 0.8 && (
-                                  <CheckCircle2 className="h-4 w-4 text-green-600" />
+                                  <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 text-green-600" />
                                 )}
                                 {result.confidence < 0.6 && (
-                                  <AlertTriangle className="h-4 w-4 text-yellow-600" />
+                                  <AlertTriangle className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-600" />
                                 )}
                               </div>
                               
-                              {/* Header Mappings with Expand/Collapse */}
+                              {/* Header Mappings - Simplified for Mobile */}
                               {Object.keys(result.mappedHeaders).length > 0 && (
-                                <div>
+                                <div className="hidden sm:block">
                                   <div className="flex items-center justify-between mb-2">
                                     <h5 className="text-sm font-medium text-gray-700">Header Mappings:</h5>
                                     {Object.keys(result.mappedHeaders).length > 3 && (
@@ -511,7 +513,7 @@ export default function FileUploader() {
                                         ) : (
                                           <>
                                             <Eye className="h-3 w-3 mr-1" />
-                                            +{Object.keys(result.mappedHeaders).length - 3} more mappings
+                                            +{Object.keys(result.mappedHeaders).length - 3} more
                                           </>
                                         )}
                                       </Button>
@@ -535,9 +537,9 @@ export default function FileUploader() {
                                 </div>
                               )}
                               
-                              {/* AI Suggestions with Expand/Collapse */}
+                              {/* AI Suggestions - Simplified for Mobile */}
                               {result.suggestions.length > 0 && (
-                                <div>
+                                <div className="hidden sm:block">
                                   <div className="flex items-center justify-between mb-2">
                                     <h5 className="text-sm font-medium text-gray-700">AI Insights:</h5>
                                     {result.suggestions.length > 2 && (
@@ -555,7 +557,7 @@ export default function FileUploader() {
                                         ) : (
                                           <>
                                             <ChevronDown className="h-3 w-3 mr-1" />
-                                            +{result.suggestions.length - 2} more insights
+                                            +{result.suggestions.length - 2} more
                                           </>
                                         )}
                                       </Button>
@@ -606,10 +608,10 @@ export default function FileUploader() {
           >
             <Card className="shadow-lg">
               <CardHeader className="bg-gradient-to-r from-slate-800 to-blue-600 text-white pb-3">
-                <CardTitle className="text-lg">Processed Files ({files.length})</CardTitle>
+                <CardTitle className="text-sm sm:text-lg">Processed Files ({files.length})</CardTitle>
               </CardHeader>
-              <CardContent className="p-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <CardContent className="p-3 sm:p-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                   {files.map((file, index) => (
                     <motion.div
                       key={file.id}
@@ -617,19 +619,19 @@ export default function FileUploader() {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ delay: index * 0.1 }}
-                      className="group relative flex items-center gap-3 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg border border-blue-200 hover:shadow-md transition-all hover-lift"
+                      className="group relative flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg border border-blue-200 hover:shadow-md transition-all hover-lift"
                     >
                       {getEntityIcon((file as any).entityType || 'unknown')}
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-gray-900 truncate">
+                        <p className="font-medium text-gray-900 truncate text-sm sm:text-base">
                           {file.name}
                         </p>
-                        <div className="flex items-center gap-2 mt-1">
-                          <p className="text-sm text-gray-500">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mt-1">
+                          <p className="text-xs sm:text-sm text-gray-500">
                             {file.data.length} rows • {file.headers.length} columns
                           </p>
                           {(file as any).aiProcessed && (
-                            <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-300">
+                            <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-300 w-fit">
                               <Brain className="h-2 w-2 mr-1" />
                               AI
                             </Badge>
@@ -640,29 +642,32 @@ export default function FileUploader() {
                         size="sm"
                         variant="ghost"
                         onClick={() => handleDeleteFile(file.id, file.name)}
-                        className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 p-0 text-red-500 hover:text-red-700 hover:bg-red-50 absolute top-2 right-2"
+                        className="opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6 sm:h-8 sm:w-8 p-0 text-red-500 hover:text-red-700 hover:bg-red-50 absolute top-2 right-2"
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
                       </Button>
                     </motion.div>
                   ))}
-                </div>
-                
-                <div className="flex justify-end mt-6">
-                  <Button 
-                    onClick={() => setCurrentStep(1)}
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-8 py-3 text-lg shadow-lg hover:shadow-xl hover-lift"
-                    disabled={files.length === 0}
-                  >
-                    Continue to Validation
-                    <ArrowRight className="h-5 w-5 ml-2" />
-                  </Button>
                 </div>
               </CardContent>
             </Card>
           </motion.div>
         )}
       </div>
+      
+      {/* Continue Button - Fixed Position on Mobile */}
+      {files.length > 0 && (
+        <div className="fixed bottom-4 left-4 right-4 sm:relative sm:bottom-auto sm:left-auto sm:right-auto sm:flex sm:justify-end sm:mt-6 z-10">
+          <Button 
+            onClick={() => setCurrentStep(1)}
+            className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-6 sm:px-8 py-3 text-sm sm:text-lg shadow-xl hover:shadow-2xl hover-lift"
+            disabled={files.length === 0}
+          >
+            Continue to Validation
+            <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 ml-2" />
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
